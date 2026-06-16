@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin • Joe's Window Tinting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'display': ['Space Grotesk', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system_ui, sans-serif; }
+    .logo-font { font-family: 'Space Grotesk', system_ui, sans-serif; letter-spacing: -.02em; }
+    .admin-main { max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
+    .stat { background:#161618; border:1px solid #27272a; border-radius:12px; padding:1rem 1.25rem; }
+    .admin-tab { padding: .65rem 1.15rem; font-size: .9rem; transition: all .1s; }
+    .admin-tab.active { border-bottom: 2px solid #facc15; color: #facc15; font-weight: 500; }
+    .admin-row { transition: background .1s; }
+    .admin-row:hover { background: #1f1f23; }
+    .form-input, .form-select {
+      background: #18181b; border: 1px solid #27272a; color: #e4e4e7;
+      padding: .65rem .9rem; border-radius: 10px; font-size: .95rem;
+    }
+    .form-input:focus, .form-select:focus { border-color: #facc15; outline: none; box-shadow: 0 0 0 3px rgba(250,204,33,.1); }
+    .btn { font-weight: 600; border-radius: 10px; padding: .55rem 1.1rem; font-size: .9rem; transition: all .1s; }
+    .btn-primary { background: #facc15; color: #18181b; }
+    .btn-primary:hover { background: #eab308; }
+    .btn-ghost { background: transparent; border: 1px solid #27272a; color: #a1a1aa; }
+    .btn-ghost:hover { background: #18181b; color: #f4f4f5; }
+    .btn-sm { padding: .3rem .65rem; font-size: .75rem; border-radius: 8px; }
+    .style-badge { font-size: 10px; padding: 1px 8px; border-radius: 9999px; background: #27272a; color: #facc15; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background:#18181b; color:#e4e4e7; padding:10px 18px; border-radius:9999px; font-size:13px; box-shadow:0 10px 15px -3px rgb(0 0 0 / 0.3); z-index:99999; display:none; align-items:center; gap:8px; border:1px solid #27272a; }
+    .progress-bar { height: 4px; background: #27272a; border-radius: 9999px; overflow: hidden; }
+    .progress-bar > div { height: 100%; background: #facc15; transition: width .15s linear; }
+  </style>
+</head>
+<body class="bg-[#0a0a0c] text-zinc-200">
+
+  <!-- TOP NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800 bg-[#0a0a0c]/95 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-5 md:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-x-3">
+          <a href="index.html" class="flex items-center gap-x-2">
+            <div class="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
+              <span class="text-zinc-950 font-black text-lg tracking-[-1.5px]">J</span>
+            </div>
+            <span class="logo-font text-2xl md:text-3xl tracking-tighter font-semibold">Joe's Window Tinting</span>
+          </a>
+          <div class="text-[10px] px-2.5 py-px bg-yellow-950 text-yellow-400 rounded tracking-[1.5px]">ADMIN</div>
+        </div>
+
+        <div class="hidden md:flex items-center gap-x-6 text-sm">
+          <a href="gallery.html" class="hover:text-yellow-400 transition">Gallery</a>
+          <a href="index.html" class="hover:text-yellow-400 transition">Site</a>
+        </div>
+
+        <div id="nav-user" class="flex items-center gap-x-3 text-sm">
+          <!-- JS populated -->
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="h-16"></div>
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="login-screen" class="max-w-md mx-auto pt-12 px-5">
+    <div class="bg-[#161618] border border-zinc-800 rounded-3xl p-9">
+      <div class="text-center mb-8">
+        <div class="flex justify-center mb-3">
+          <div class="w-11 h-11 bg-yellow-400 rounded-2xl flex items-center justify-center">
+            <span class="text-zinc-950 font-black text-3xl tracking-[-2px]">J</span>
+          </div>
+        </div>
+        <div class="logo-font text-3xl tracking-tighter">Joe's Window Tinting</div>
+        <div class="text-yellow-400/90 tracking-[2px] text-xs mt-1">ADMIN DASHBOARD</div>
+      </div>
+
+      <form id="login-form" class="space-y-5">
+        <div>
+          <label class="block text-xs tracking-widest text-zinc-400 mb-1.5">EMAIL</label>
+          <input id="login-email" type="email" value="admin@joestint.com" class="form-input w-full" placeholder="you@domain.com" required>
+        </div>
+        <div>
+          <label class="block text-xs tracking-widest text-zinc-400 mb-1.5">PASSWORD</label>
+          <input id="login-password" type="password" value="jowt2025" class="form-input w-full" placeholder="Your admin password" required>
+          <div class="text-[11px] text-zinc-500 mt-1.5">Demo password: <span class="text-amber-400">jowt2025</span> (change for production)</div>
+        </div>
+
+        <div class="flex gap-3 pt-1">
+          <button type="submit" class="btn btn-primary flex-1">SIGN IN</button>
+        </div>
+      </form>
+
+      <div class="mt-6 pt-5 border-t border-zinc-800 text-[11px] text-center text-zinc-500">
+        This is a demo admin. For real auth + cloud storage, connect Supabase (see instructions below).
+      </div>
+    </div>
+
+    <div class="text-center mt-5 text-xs text-zinc-500">
+      Changes save to your browser. Open gallery.html in another tab to see live updates.
+    </div>
+  </div>
+
+  <!-- ===================== DASHBOARD ===================== -->
+  <div id="dashboard" class="hidden admin-main pt-7 pb-20">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-y-4 mb-8">
+      <div>
+        <div class="uppercase text-xs tracking-[3px] text-yellow-500/70">CMS</div>
+        <h1 class="text-4xl font-semibold tracking-tighter">Dashboard</h1>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="refreshAll()" class="btn btn-ghost btn-sm">↻ REFRESH DATA</button>
+        <button onclick="logoutAdmin()" class="btn btn-ghost btn-sm text-red-400/90">SIGN OUT</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+      <div class="stat">
+        <div class="text-xs text-zinc-400">GALLERY PIECES</div>
+        <div id="stat-gallery" class="text-4xl font-semibold tabular-nums mt-1">—</div>
+      </div>
+      <div class="stat">
+        <div class="text-xs text-zinc-400">LEADS / INQUIRIES</div>
+        <div id="stat-submissions" class="text-4xl font-semibold tabular-nums mt-1">—</div>
+      </div>
+      <div class="stat">
+        <div class="text-xs text-zinc-400">LOGGED IN AS</div>
+        <div id="stat-user" class="text-sm mt-2 text-zinc-300 font-medium break-all">—</div>
+      </div>
+      <div class="stat">
+        <div class="text-xs text-zinc-400">QUICK LINKS</div>
+        <div class="mt-1.5 text-sm flex flex-wrap gap-x-3">
+          <a href="gallery.html" target="_blank" class="underline hover:text-yellow-400">Live Gallery</a>
+          <a href="index.html" target="_blank" class="underline hover:text-yellow-400">Homepage</a>
+          <a href="#" onclick="window.JoWTData && window.JoWTData.resetToDefaults(); return false;" class="underline hover:text-red-400 text-xs">Reset Data</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="flex border-b border-zinc-800 mb-1 text-sm overflow-x-auto">
+      <button onclick="switchTab('gallery')" id="tab-gallery" class="admin-tab active whitespace-nowrap">Gallery</button>
+      <button onclick="switchTab('categories')" id="tab-categories" class="admin-tab whitespace-nowrap">Categories</button>
+      <button onclick="switchTab('submissions')" id="tab-submissions" class="admin-tab whitespace-nowrap">Submissions</button>
+    </div>
+
+    <!-- ========== GALLERY TAB ========== -->
+    <div id="panel-gallery" class="tab-panel">
+      <div class="flex items-center justify-between py-5">
+        <div>
+          <div class="font-semibold">Gallery Work</div>
+          <div class="text-xs text-zinc-500">Images + details shown on the public gallery page</div>
+        </div>
+        <button onclick="showUploadModal()" class="btn btn-primary">+ UPLOAD NEW PIECE</button>
+      </div>
+
+      <div id="admin-gallery-list" class="space-y-2"></div>
+    </div>
+
+    <!-- ========== CATEGORIES TAB ========== -->
+    <div id="panel-categories" class="tab-panel hidden">
+      <div class="py-5">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-y-2 mb-5">
+          <div>
+            <div class="font-semibold text-xl tracking-tight">Categories &amp; Filters</div>
+            <div class="text-xs text-zinc-500 mt-0.5 max-w-prose">Manage the filters that appear on the public gallery. New categories show up immediately in the upload form and public filters.</div>
+          </div>
+          <button onclick="refreshCategoriesList()" class="btn btn-ghost btn-sm self-start md:self-auto">↻ REFRESH</button>
+        </div>
+
+        <!-- Add new category -->
+        <div class="bg-[#161618] border border-zinc-800 rounded-2xl p-5 mb-6">
+          <div class="text-xs uppercase tracking-[1.5px] text-zinc-400 mb-2">CREATE NEW CATEGORY</div>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input id="new-cat-name" type="text" class="form-input flex-1" placeholder="e.g. Marine, Classic Cars, Fleet Vehicles..." />
+            <button onclick="addNewCategory()" class="btn btn-primary whitespace-nowrap px-8">+ ADD CATEGORY</button>
+          </div>
+          <div class="text-[11px] text-zinc-500 mt-3">Categories power the filter pills on gallery.html.</div>
+        </div>
+
+        <div class="mb-2 flex items-center justify-between">
+          <div class="text-xs uppercase tracking-[1.5px] text-zinc-400">CURRENT CATEGORIES</div>
+          <div id="cats-count" class="text-xs text-zinc-500"></div>
+        </div>
+        <div id="categories-list" class="space-y-2"></div>
+
+        <div class="text-[11px] mt-4 text-zinc-500 border border-zinc-800 bg-[#111113] rounded-2xl p-3">
+          Tip: Deleting a category only removes it from the filter list. Existing gallery pieces keep their category value and will still show correctly.
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SUBMISSIONS TAB ========== -->
+    <div id="panel-submissions" class="tab-panel hidden">
+      <div class="flex items-center justify-between py-5">
+        <div class="font-semibold">Leads &amp; Inquiries</div>
+        <div class="flex gap-2">
+          <button onclick="exportSubmissionsCSV()" class="btn btn-ghost btn-sm">Export CSV</button>
+          <button onclick="clearSubmissions()" class="btn btn-ghost btn-sm text-red-400">Clear All</button>
+        </div>
+      </div>
+      <div id="admin-submissions-list" class="space-y-3"></div>
+      <div class="text-[11px] text-zinc-500 mt-6">Quote requests and contact form submissions are saved here (local only for now).</div>
+    </div>
+  </div>
+
+  <!-- ===================== UPLOAD / EDIT MODAL ===================== -->
+  <div id="upload-modal" onclick="if (event.target.id === 'upload-modal') hideUploadModal()" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-[200] p-4">
+    <div onclick="event.stopImmediatePropagation()" class="bg-[#161618] border border-zinc-700 w-full max-w-lg rounded-3xl p-7">
+      <div class="font-semibold text-2xl tracking-tighter mb-1" id="modal-title">Upload New Work</div>
+      <div class="text-sm text-zinc-400 mb-6" id="modal-subtitle">Image is stored in your browser (localStorage). For production use Supabase Storage.</div>
+
+      <form id="upload-form" onsubmit="handleUploadSubmit(event)">
+        <input type="hidden" id="edit-id">
+
+        <!-- File picker -->
+        <div class="mb-5" id="file-section">
+          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">IMAGE FILE</label>
+          <input type="file" id="upload-file" accept="image/*" class="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-zinc-900 file:text-white hover:file:bg-zinc-800" required>
+          <div class="text-[11px] text-zinc-500 mt-1.5">JPG, PNG, WebP recommended. Keep files small for best performance.</div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">TITLE / PROJECT</label>
+          <input id="upload-title" type="text" class="form-input w-full" placeholder="2024 Ford F-150 — 20% Ceramic" required>
+        </div>
+
+        <div class="mb-5">
+          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">DESCRIPTION</label>
+          <input id="upload-desc" type="text" class="form-input w-full" placeholder="Full ceramic. Great heat rejection on this work truck." required>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">CATEGORY</label>
+            <select id="upload-category" class="form-select w-full"></select>
+          </div>
+          <div>
+            <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">DARKNESS</label>
+            <input id="upload-darkness" type="text" class="form-input w-full" placeholder="20%" value="20%">
+          </div>
+          <div>
+            <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">VEHICLE TYPE</label>
+            <select id="upload-vehicle" class="form-select w-full">
+              <option value="car">Car</option>
+              <option value="truck">Truck</option>
+              <option value="suv">SUV</option>
+              <option value="other">Other / Equipment</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Progress -->
+        <div id="upload-progress-wrap" class="hidden mt-6">
+          <div class="text-xs text-zinc-400 mb-1.5 flex justify-between">
+            <div>PROCESSING...</div>
+            <div id="upload-percent">0%</div>
+          </div>
+          <div class="progress-bar"><div id="upload-progress" style="width:0%"></div></div>
+        </div>
+
+        <div class="flex gap-3 mt-7">
+          <button type="button" onclick="hideUploadModal()" class="btn btn-ghost flex-1">CANCEL</button>
+          <button type="submit" id="upload-submit-btn" class="btn btn-primary flex-1">UPLOAD &amp; PUBLISH</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="global-toast" class="toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/common.js"></script>
+  <script src="js/gallery-data.js"></script>
+  <script>
+    // =======================================================
+    // ADMIN DASHBOARD for Joe's Window Tinting
+    // Directly modeled on the ThankQTattoo admin (structure, UX, patterns)
+    // Uses localStorage via gallery-data.js for zero-config operation.
+    // =======================================================
+    let currentUser = null;
+    let galleryCache = [];
+
+    // Simple demo auth (easy to replace with real Supabase Auth)
+    const DEMO_EMAIL = 'admin@joestint.com';
+    const DEMO_PASSWORD = 'jowt2025';
+
+    async function bootAdmin() {
+      // In a real upgrade you would init Supabase here exactly like thankqtattoo
+      // and use onAuthStateChange + getUser()
+
+      // For now: check if previously "logged in" this session
+      const savedUser = sessionStorage.getItem('jowt_admin_user');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        showDashboard();
+      } else {
+        showLogin();
+      }
+
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+    }
+
+    function showLogin() {
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('login-screen').style.display = 'block';
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('nav-user').innerHTML = '';
+    }
+
+    function showDashboard() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').classList.remove('hidden');
+
+      const nav = document.getElementById('nav-user');
+      nav.innerHTML = `
+        <div class="text-xs px-3 py-1 bg-zinc-900 rounded-full flex items-center gap-2 border border-zinc-700">
+          <span class="text-emerald-400">●</span>
+          <span class="font-medium">${currentUser?.email || 'Admin'}</span>
+        </div>
+      `;
+
+      initDashboard();
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const pass = document.getElementById('login-password').value;
+
+      // Demo auth — replace this block with real Supabase sign-in
+      if (email === DEMO_EMAIL && pass === DEMO_PASSWORD) {
+        currentUser = { email };
+        sessionStorage.setItem('jowt_admin_user', JSON.stringify(currentUser));
+        showDashboard();
+      } else {
+        alert('Demo login failed.\n\nUse:\nEmail: admin@joestint.com\nPassword: jowt2025');
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('jowt_admin_user');
+      currentUser = null;
+      window.location.reload();
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      const panel = document.getElementById('panel-' + tab);
+      if (panel) panel.classList.remove('hidden');
+
+      document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById('tab-' + tab);
+      if (btn) btn.classList.add('active');
+
+      if (tab === 'categories') refreshCategoriesList();
+      if (tab === 'submissions') renderSubmissionsList();
+    }
+
+    async function initDashboard() {
+      await refreshGalleryList();
+      updateStats();
+      switchTab('gallery');
+    }
+
+    function updateStats() {
+      const gallery = window.JoWTData.getGalleryItems();
+      document.getElementById('stat-gallery').textContent = gallery.length || '—';
+
+      const subs = window.JoWTData.getSubmissions();
+      document.getElementById('stat-submissions').textContent = subs.length;
+
+      const userEl = document.getElementById('stat-user');
+      if (userEl) userEl.textContent = currentUser?.email || '—';
+    }
+
+    function refreshAll() {
+      refreshGalleryList().then(() => {
+        updateStats();
+        if (!document.getElementById('panel-categories').classList.contains('hidden')) {
+          refreshCategoriesList();
+        }
+        if (!document.getElementById('panel-submissions').classList.contains('hidden')) {
+          renderSubmissionsList();
+        }
+        window.JoWT.showToast('Refreshed');
+      });
+    }
+
+    // ==================== GALLERY ====================
+    async function refreshGalleryList() {
+      const container = document.getElementById('admin-gallery-list');
+      container.innerHTML = `<div class="text-xs text-zinc-500 p-3">Loading gallery...</div>`;
+
+      galleryCache = window.JoWTData.getGalleryItems();
+
+      container.innerHTML = '';
+
+      if (!galleryCache.length) {
+        container.innerHTML = `
+          <div class="text-center py-10 border border-dashed border-zinc-800 rounded-2xl">
+            <div class="text-sm">No gallery pieces yet.</div>
+            <button onclick="showUploadModal()" class="mt-3 btn btn-primary btn-sm">Upload your first piece</button>
+          </div>`;
+        updateStats();
+        return;
+      }
+
+      galleryCache.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'admin-row flex gap-4 items-center bg-[#161618] border border-zinc-800 rounded-2xl p-3';
+
+        const safeId = String(item.id || '').replace(/'/g, "\\'");
+        const imgSrc = item.img && item.img.startsWith('data:') ? item.img : (item.img || 'https://picsum.photos/id/1015/80/80');
+
+        row.innerHTML = `
+          <img src="${imgSrc}" class="w-16 h-16 object-cover rounded-lg border border-zinc-700 flex-shrink-0" alt="">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 text-xs">
+              <span class="style-badge">${item.category || 'auto'}</span>
+              <span class="text-yellow-400/80">${item.darkness || ''}</span>
+              <span class="text-zinc-500">${item.vehicleType || ''}</span>
+            </div>
+            <div class="font-medium leading-tight mt-0.5 pr-2 line-clamp-2">${item.title || '(no title)'}</div>
+            <div class="text-[11px] text-zinc-500 mt-0.5 line-clamp-1">${item.desc || ''}</div>
+          </div>
+          <div class="flex-shrink-0 flex gap-2">
+            <button class="btn btn-ghost btn-sm text-xs" onclick="editGalleryItem('${safeId}')">EDIT</button>
+            <button class="btn btn-ghost btn-sm text-xs text-red-400" onclick="deleteGalleryItem('${safeId}')">DELETE</button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      updateStats();
+    }
+
+    // Modal
+    let editingId = null;
+
+    async function showUploadModal(existing = null) {
+      const modal = document.getElementById('upload-modal');
+      const titleEl = document.getElementById('modal-title');
+      const subEl = document.getElementById('modal-subtitle');
+      const form = document.getElementById('upload-form');
+      const fileInput = document.getElementById('upload-file');
+      const submitBtn = document.getElementById('upload-submit-btn');
+
+      form.reset();
+      document.getElementById('upload-progress-wrap').classList.add('hidden');
+      document.getElementById('edit-id').value = '';
+      editingId = null;
+
+      // Populate category dropdown from live categories
+      const catSelect = document.getElementById('upload-category');
+      catSelect.innerHTML = '';
+      const cats = window.JoWTData.getCategories();
+      cats.forEach(c => {
+        // skip the "All Work" meta entry if present
+        if (c.name.toLowerCase() === 'all work') return;
+        const opt = document.createElement('option');
+        opt.value = c.name.toLowerCase().includes('auto') ? 'automotive' :
+                    c.name.toLowerCase().includes('truck') ? 'truck' :
+                    c.name.toLowerCase().includes('ag') ? 'ag' :
+                    c.name.toLowerCase().includes('comm') ? 'commercial' :
+                    c.name.toLowerCase().includes('res') ? 'residential' : c.name.toLowerCase();
+        opt.textContent = c.name;
+        catSelect.appendChild(opt);
+      });
+
+      if (existing) {
+        editingId = existing.id;
+        titleEl.textContent = 'Edit Gallery Piece';
+        subEl.textContent = 'Update title, description, category, darkness. To replace the photo, delete and re-upload.';
+        document.getElementById('edit-id').value = existing.id;
+        document.getElementById('upload-title').value = existing.title || '';
+        document.getElementById('upload-desc').value = existing.desc || '';
+        document.getElementById('upload-darkness').value = existing.darkness || '20%';
+        document.getElementById('upload-vehicle').value = existing.vehicleType || 'car';
+
+        // Try to select correct category
+        const catVal = existing.category || 'automotive';
+        if (Array.from(catSelect.options).some(o => o.value === catVal)) {
+          catSelect.value = catVal;
+        }
+
+        document.getElementById('file-section').classList.add('hidden');
+        fileInput.required = false;
+        submitBtn.textContent = 'SAVE CHANGES';
+      } else {
+        editingId = null;
+        titleEl.textContent = 'Upload New Work';
+        subEl.textContent = 'Photo is converted to a data URL and saved locally. It will appear instantly on gallery.html.';
+        document.getElementById('file-section').classList.remove('hidden');
+        fileInput.required = true;
+        submitBtn.textContent = 'UPLOAD & PUBLISH';
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function hideUploadModal() {
+      const modal = document.getElementById('upload-modal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+      document.getElementById('file-section').classList.remove('hidden');
+      document.getElementById('upload-file').required = true;
+    }
+
+    async function handleUploadSubmit(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('edit-id').value;
+      const title = document.getElementById('upload-title').value.trim();
+      const desc = document.getElementById('upload-desc').value.trim();
+      const category = document.getElementById('upload-category').value;
+      const darkness = document.getElementById('upload-darkness').value.trim();
+      const vehicleType = document.getElementById('upload-vehicle').value;
+      const fileInput = document.getElementById('upload-file');
+      const progressWrap = document.getElementById('upload-progress-wrap');
+      const progressBar = document.getElementById('upload-progress');
+      const percentEl = document.getElementById('upload-percent');
+      const submitBtn = document.getElementById('upload-submit-btn');
+
+      submitBtn.disabled = true;
+
+      try {
+        if (id) {
+          // Edit metadata only
+          await window.JoWTData.updateGalleryItem(id, { title, desc, category, darkness, vehicleType });
+          window.JoWT.showToast('Piece updated.');
+        } else {
+          // New with image
+          if (!fileInput.files || !fileInput.files[0]) {
+            alert('Please select an image file.');
+            submitBtn.disabled = false;
+            return;
+          }
+
+          const file = fileInput.files[0];
+          progressWrap.classList.remove('hidden');
+          progressBar.style.width = '10%';
+          percentEl.textContent = '10%';
+
+          // Convert to data URL (simulates upload)
+          const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+
+          // Fake progress
+          progressBar.style.width = '70%';
+          percentEl.textContent = '70%';
+          await new Promise(r => setTimeout(r, 180));
+
+          const newItem = {
+            title, desc, category, darkness, vehicleType,
+            img: dataUrl
+          };
+          window.JoWTData.addGalleryItem(newItem);
+
+          progressBar.style.width = '100%';
+          percentEl.textContent = '100%';
+          await new Promise(r => setTimeout(r, 120));
+
+          window.JoWT.showToast('Uploaded! Visible on the public gallery now.');
+        }
+
+        hideUploadModal();
+        await refreshGalleryList();
+        updateStats();
+
+      } catch (err) {
+        console.error(err);
+        alert('Save failed: ' + (err.message || err));
+      } finally {
+        submitBtn.disabled = false;
+        if (progressWrap) progressWrap.classList.add('hidden');
+      }
+    }
+
+    function editGalleryItem(id) {
+      const item = galleryCache.find(p => String(p.id) === String(id));
+      if (!item) { alert('Item not found. Refresh and try again.'); return; }
+      showUploadModal(item);
+    }
+
+    function deleteGalleryItem(id) {
+      if (!confirm('Delete this gallery piece? This cannot be undone.')) return;
+      try {
+        window.JoWTData.deleteGalleryItem(id);
+        window.JoWT.showToast('Deleted.');
+        refreshGalleryList();
+        updateStats();
+      } catch (e) {
+        alert('Delete failed: ' + e.message);
+      }
+    }
+
+    // ==================== CATEGORIES ====================
+    function refreshCategoriesList() {
+      const container = document.getElementById('categories-list');
+      const countEl = document.getElementById('cats-count');
+      if (!container) return;
+
+      container.innerHTML = `<div class="text-xs text-zinc-500 px-1 py-3">Loading categories...</div>`;
+
+      const cats = window.JoWTData.getCategories().filter(c => c.name.toLowerCase() !== 'all work');
+      countEl.textContent = `${cats.length} categories`;
+
+      container.innerHTML = '';
+
+      if (!cats.length) {
+        container.innerHTML = `<div class="text-center py-8 border border-dashed border-zinc-800 rounded-2xl text-sm text-zinc-400">No custom categories yet.</div>`;
+        return;
+      }
+
+      cats.forEach(cat => {
+        const row = document.createElement('div');
+        row.className = 'admin-row flex items-center gap-4 bg-[#161618] border border-zinc-800 rounded-2xl px-4 py-3';
+
+        row.innerHTML = `
+          <div class="flex-1 min-w-0">
+            <div class="font-medium text-lg tracking-tight">${window.JoWT.escapeHtml(cat.name)}</div>
+            <div class="text-[10px] text-zinc-500">Used for public filters &amp; upload dropdown</div>
+          </div>
+          <div class="flex gap-2 flex-shrink-0">
+            <button class="btn btn-ghost btn-sm text-xs" data-action="edit">EDIT</button>
+            <button class="btn btn-ghost btn-sm text-xs text-red-400" data-action="delete">DELETE</button>
+          </div>
+        `;
+
+        row.querySelector('[data-action="edit"]').onclick = () => editCategory(cat);
+        row.querySelector('[data-action="delete"]').onclick = () => deleteCategory(cat);
+
+        container.appendChild(row);
+      });
+    }
+
+    function addNewCategory() {
+      const input = document.getElementById('new-cat-name');
+      const name = (input.value || '').trim();
+      if (!name) { alert('Enter a category name'); return; }
+
+      try {
+        window.JoWTData.addCategory(name);
+        input.value = '';
+        window.JoWT.showToast('Category added. It will appear in filters and the upload form.');
+        refreshCategoriesList();
+
+        // live update open upload modal if present
+        const modal = document.getElementById('upload-modal');
+        if (modal && modal.classList.contains('flex')) {
+          // re-populate category select
+          const sel = document.getElementById('upload-category');
+          if (sel) {
+            const current = sel.value;
+            sel.innerHTML = '';
+            window.JoWTData.getCategories().forEach(c => {
+              if (c.name.toLowerCase() === 'all work') return;
+              const o = document.createElement('option');
+              o.value = c.name.toLowerCase().includes('auto') ? 'automotive' : c.name.toLowerCase();
+              o.textContent = c.name;
+              sel.appendChild(o);
+            });
+            if (current) sel.value = current;
+          }
+        }
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    function editCategory(cat) {
+      const newName = prompt('Rename category:', cat.name);
+      if (!newName || newName.trim() === cat.name) return;
+
+      try {
+        window.JoWTData.updateCategory(cat.id, newName.trim());
+        window.JoWT.showToast('Category renamed.');
+        refreshCategoriesList();
+        refreshGalleryList(); // in case labels change
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    function deleteCategory(cat) {
+      if (!confirm(`Delete category "${cat.name}"?\n\nExisting gallery pieces using this category will keep working (the value is stored on each piece).`)) return;
+
+      try {
+        window.JoWTData.deleteCategory(cat.id);
+        window.JoWT.showToast('Category removed.');
+        refreshCategoriesList();
+        refreshGalleryList();
+      } catch (e) {
+        alert(e.message);
+      }
+    }
+
+    // ==================== SUBMISSIONS ====================
+    function renderSubmissionsList() {
+      const container = document.getElementById('admin-submissions-list');
+      const subs = window.JoWTData.getSubmissions();
+
+      container.innerHTML = '';
+
+      if (!subs.length) {
+        container.innerHTML = `<div class="p-5 border border-dashed border-zinc-800 rounded-2xl text-sm text-zinc-400">No leads yet. They appear here when people submit the contact or quote form on the site.</div>`;
+        return;
+      }
+
+      subs.forEach((s) => {
+        const div = document.createElement('div');
+        div.className = 'bg-[#161618] border border-zinc-800 rounded-2xl p-4 text-sm';
+        const date = new Date(s.ts).toLocaleString();
+
+        let quoteInfo = '';
+        if (s.quote) {
+          quoteInfo = `<div class="text-[11px] mt-1 text-yellow-400/80">${s.quote}</div>`;
+        }
+
+        div.innerHTML = `
+          <div class="flex justify-between text-xs">
+            <div class="text-zinc-400">${date}</div>
+            <div class="font-mono text-[10px] text-zinc-500">${s.id}</div>
+          </div>
+          <div class="mt-1 font-medium">${window.JoWT.escapeHtml(s.name || '')} <span class="font-normal text-zinc-400">• ${window.JoWT.escapeHtml(s.phone || s.email || '')}</span></div>
+          <div class="text-xs mt-0.5 text-yellow-400/80">${window.JoWT.escapeHtml(s.service || 'General')}</div>
+          ${quoteInfo}
+          <div class="text-sm mt-2 text-zinc-300">${window.JoWT.escapeHtml((s.message || '').substring(0, 180))}${(s.message || '').length > 180 ? '…' : ''}</div>
+
+          <div class="flex gap-2 mt-3">
+            ${s.contacted ? '<span class="px-3 py-1 text-xs rounded-full border border-green-800/60 text-green-400">CONTACTED</span>' : ''}
+            <button class="px-3 py-1 text-xs rounded-full border border-green-800/60 text-green-400 hover:bg-green-950" onclick="markContacted('${s.id}')">MARK CONTACTED</button>
+            <button class="px-3 py-1 text-xs rounded-full border border-red-900/50 text-red-400 hover:bg-red-950" onclick="deleteSubmission('${s.id}')">DELETE</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function markContacted(id) {
+      window.JoWTData.markSubmissionContacted(id);
+      renderSubmissionsList();
+      updateStats();
+    }
+
+    function deleteSubmission(id) {
+      if (!confirm('Delete this lead?')) return;
+      window.JoWTData.deleteSubmission(id);
+      renderSubmissionsList();
+      updateStats();
+    }
+
+    function exportSubmissionsCSV() {
+      const subs = window.JoWTData.getSubmissions();
+      if (!subs.length) { alert('No submissions to export'); return; }
+
+      const headers = ['id','ts','name','phone','email','service','message','quote'];
+      let csv = headers.join(',') + '\n';
+      subs.forEach(s => {
+        const row = headers.map(h => {
+          let v = (s[h] || '').toString().replace(/"/g, '""');
+          return `"${v}"`;
+        });
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `jowt_leads_${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearSubmissions() {
+      if (!confirm('Clear all leads?')) return;
+      window.JoWTData.clearSubmissions();
+      renderSubmissionsList();
+      updateStats();
+    }
+
+    // Boot
+    window.onload = bootAdmin;
+  </script>
+</body>
+</html>

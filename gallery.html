@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Work • Gallery | Joe's Window Tinting — Clarksville, TN</title>
+  <meta name="description" content="Browse real examples of our window tinting work: cars, trucks, SUVs, homes, commercial buildings, and agriculture equipment since 1981.">
+  <link rel="icon" type="image/svg+xml" href="public/favicon.svg">
+  
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/common.js"></script>
+  <script src="js/gallery-data.js"></script>
+  
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid #e4e4e7;
+    }
+
+    .gallery-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s;
+    }
+    .gallery-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      border-color: #facc15;
+    }
+
+    .filter-btn {
+      transition: all 0.15s ease;
+      background-color: white;
+      border-color: #e4e4e7;
+      color: #3f3f46;
+    }
+    .filter-btn.active {
+      background-color: #facc15;
+      color: #18181b;
+      border-color: #facc15;
+    }
+
+    .input {
+      background-color: white;
+      border: 1px solid #d4d4d8;
+      transition: all 0.15s ease;
+      color: #18181b;
+    }
+    .input:focus {
+      border-color: #facc15;
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.12);
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: #facc15;
+      color: #18181b;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .btn-primary:hover { background-color: #eab308; transform: translateY(-1px); }
+
+    .btn-secondary {
+      background-color: white;
+      border: 1px solid #d4d4d8;
+      color: #3f3f46;
+      transition: all 0.15s ease;
+    }
+    .btn-secondary:hover { background-color: #f4f4f5; border-color: #a1a1aa; color: #18181b; }
+
+    .modal {
+      animation: modalEnter 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    @keyframes modalEnter {
+      from { opacity: 0; transform: translateY(18px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .nav-link { transition: color 0.15s ease; }
+    .nav-link:hover { color: #18181b; }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 min-h-screen">
+  
+  <!-- NAVBAR (Gallery version) -->
+  <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-xl z-50 border-b border-zinc-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-yellow-400 rounded-lg flex items-center justify-center">
+          <span class="text-zinc-950 font-black text-xl tracking-tighter">JOE</span>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-zinc-900 tracking-tight">Joe's Window Tinting</div>
+          <div class="text-[10px] text-zinc-500 -mt-1">EST 1981 • CLARKSVILLE, TN</div>
+        </div>
+      </a>
+
+      <!-- Desktop -->
+      <div class="hidden md:flex items-center gap-9 text-sm font-medium">
+        <a href="index.html" class="nav-link text-zinc-600">Home</a>
+        <a href="gallery.html" class="nav-link text-yellow-600 font-medium">Gallery</a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-4">
+        <a href="tel:9318966453" class="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+          (931) 896-6453
+        </a>
+        <a href="index.html#quote-section" class="btn-primary px-6 py-2.5 rounded-full text-sm">Get a Quote</a>
+      </div>
+
+      <!-- Mobile -->
+      <div class="flex md:hidden items-center gap-3">
+        <a href="tel:9318966453" class="p-2.5 rounded-full bg-zinc-100 text-yellow-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+        </a>
+        <button onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-zinc-100 text-zinc-700" aria-label="Menu">
+          <svg id="m-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="m-close" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6h12v12"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden border-t border-zinc-200 bg-white px-6 py-6 text-sm">
+      <a href="index.html" class="block py-2 text-zinc-600">← Back to Home</a>
+      <a href="gallery.html" class="block py-2 text-yellow-600 font-medium">Gallery</a>
+      <a href="tel:9318966453" class="block py-2 mt-2 text-yellow-600 font-medium">(931) 896-6453</a>
+      <a href="index.html#quote-section" class="btn-primary block text-center py-3 rounded-full mt-3">Get a Quote</a>
+    </div>
+  </nav>
+
+  <!-- GALLERY HERO BANNER -->
+  <div class="pt-16 relative bg-white border-b border-zinc-200">
+    <div class="max-w-5xl mx-auto px-6 text-center py-16">
+      <div class="text-yellow-600 text-xs tracking-[4px] font-semibold mb-3">SINCE 1981</div>
+      <h1 class="text-6xl font-bold tracking-tighter mb-4 text-zinc-900">Our Work</h1>
+      <p class="text-2xl text-zinc-600 max-w-2xl mx-auto">
+        Hundreds of vehicles, homes, businesses, and pieces of equipment tinted across Middle Tennessee.
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <a href="index.html" class="btn-secondary px-6 py-2.5 rounded-full text-sm inline-flex items-center">← Back to Home</a>
+        <a href="tel:9318966453" class="btn-primary px-6 py-2.5 rounded-full text-sm inline-flex items-center">Call (931) 896-6453</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS + GALLERY -->
+  <div class="max-w-7xl mx-auto px-6 py-9">
+    
+    <!-- Sticky filter bar -->
+    <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-8 sticky top-16 z-40 bg-zinc-50/95 py-4 border-b border-zinc-200">
+      
+      <!-- Category pills (populated from admin-managed categories) -->
+      <div class="flex flex-wrap gap-2" id="category-filters">
+        <!-- JS populated dynamically from JoWTData -->
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+        <!-- Search -->
+        <div class="relative flex-1 lg:w-80">
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-4 top-3.5 text-zinc-400 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input id="search-input" type="text" placeholder="Search projects..." 
+                 class="input w-full pl-11 py-3 rounded-2xl text-sm"
+                 oninput="filterGallery()">
+        </div>
+
+        <!-- Vehicle + Sort -->
+        <div class="flex gap-2">
+          <select id="vehicle-filter" onchange="filterGallery()" class="input rounded-2xl px-4 py-3 text-sm appearance-none">
+            <option value="All Vehicles">All Vehicles</option>
+            <option value="Cars">Cars</option>
+            <option value="Trucks & SUVs">Trucks &amp; SUVs</option>
+            <option value="Other">Other / Equipment</option>
+          </select>
+          
+          <select id="sort-select" onchange="filterGallery()" class="input rounded-2xl px-4 py-3 text-sm appearance-none">
+            <option value="newest">Newest First</option>
+            <option value="darkest">Darkest First</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between mb-4 px-1 text-sm text-zinc-600">
+      <div>
+        Showing <span id="result-count" class="font-semibold text-zinc-900">22</span> projects
+      </div>
+      <div class="hidden md:block text-xs text-zinc-500">Click any photo for full view &amp; details</div>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-16">
+      <!-- Cards injected by JS -->
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="text-center pb-12">
+      <p class="text-zinc-600 mb-3">Ready to add your vehicle or project to the collection?</p>
+      <a href="index.html#quote-section" class="btn-primary inline-flex items-center gap-2 px-8 py-3 rounded-2xl text-base">Get Your Instant Quote</a>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightbox" onclick="closeLightbox()" class="hidden fixed inset-0 z-[80] bg-black/80 flex items-center justify-center p-4">
+    <div onclick="event.stopImmediatePropagation()" class="modal relative max-w-[1100px] w-full">
+      <!-- Close -->
+      <button onclick="closeLightbox()" 
+              class="absolute -top-3 -right-3 z-10 bg-white hover:bg-zinc-100 text-zinc-700 p-3 rounded-full border border-zinc-200 shadow">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6h12v12"/></svg>
+      </button>
+
+      <div class="relative rounded-3xl overflow-hidden border border-zinc-200 shadow-2xl bg-white">
+        <img id="lightbox-image" class="w-full max-h-[72vh] object-contain bg-zinc-50" alt="">
+        
+        <div class="p-6 bg-white border-t border-zinc-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-3 mb-1">
+              <span id="lightbox-category" class="uppercase tracking-[2px] text-xs text-yellow-600"></span>
+              <span id="lightbox-darkness" class="text-xs bg-yellow-100 px-2 py-px rounded text-yellow-700"></span>
+            </div>
+            <div id="lightbox-title" class="text-2xl font-semibold tracking-tight text-zinc-900"></div>
+            <div id="lightbox-desc" class="text-zinc-600 mt-1"></div>
+          </div>
+
+          <div class="flex gap-3 self-start md:self-auto">
+            <button onclick="navigateLightbox(-1)" class="btn-secondary px-5 py-3 rounded-2xl flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              Prev
+            </button>
+            <button onclick="navigateLightbox(1)" class="btn-secondary px-5 py-3 rounded-2xl flex items-center gap-2">
+              Next
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-zinc-400 mt-4 tracking-widest">
+        USE ← → ARROWS &nbsp; • &nbsp; ESC TO CLOSE &nbsp; • &nbsp; <span id="lightbox-counter"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER (light) -->
+  <footer class="border-t border-zinc-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 py-9 text-sm flex flex-col md:flex-row md:items-center justify-between gap-y-3 text-zinc-500">
+      <div>© <span id="year"></span> Joe's Window Tinting • Clarksville, TN</div>
+      <a href="index.html" class="hover:text-zinc-800">Back to homepage</a>
+      <div class="text-xs">All images are representative examples. Real customer photos coming soon.</div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== DATA — now loaded from shared admin layer (localStorage) ====================
+    let GALLERY_ITEMS = [];
+
+    function loadGalleryData() {
+      if (window.JoWTData && window.JoWTData.getGalleryItems) {
+        GALLERY_ITEMS = window.JoWTData.getGalleryItems();
+      } else {
+        // Fallback seed (should rarely happen)
+        GALLERY_ITEMS = [
+          { id: 'g1', category: 'automotive', vehicleType: 'car', title: '2023 Tesla Model Y — 20% Ceramic', desc: 'Full vehicle premium ceramic. Massive heat rejection.', darkness: '20%', img: 'https://picsum.photos/id/1015/1400/900' },
+          { id: 'g2', category: 'automotive', vehicleType: 'truck', title: 'Ford F-150 Lariat — 5% Rear', desc: 'Aggressive privacy on rear + 35% fronts for legal compliance.', darkness: '5%', img: 'https://picsum.photos/id/160/1400/900' }
+        ];
+      }
+    }
+
+    // State
+    // (Categories are now loaded dynamically in initCategoryFilters from the admin data layer)
+    let activeFilter = 'all';
+    let vehicleFilter = 'All Vehicles';
+    let searchTerm = '';
+    let sortBy = 'newest';
+    let currentFiltered = [];
+    let selectedIndex = null; // index into currentFiltered
+
+    function initYear() {
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+    }
+
+    function initCategoryFilters() {
+      const container = document.getElementById('category-filters');
+      container.innerHTML = '';
+      
+      // Build pills from the live categories managed in admin (with friendly mapping)
+      let cats = [];
+      if (window.JoWTData && window.JoWTData.getCategories) {
+        cats = window.JoWTData.getCategories();
+      } else {
+        cats = [
+          { id: 'all', name: 'All Work' },
+          { id: 'automotive', name: 'Automotive' },
+          { id: 'truck', name: 'Trucks & SUVs' },
+          { id: 'ag', name: 'Ag & Equipment' },
+          { id: 'commercial', name: 'Commercial' },
+          { id: 'residential', name: 'Residential' },
+        ];
+      }
+
+      cats.forEach((cat, index) => {
+        // Map friendly names back to the filter ids the rest of the code expects
+        let filterId = cat.name.toLowerCase().includes('all') ? 'all' :
+                       cat.name.toLowerCase().includes('auto') ? 'automotive' :
+                       cat.name.toLowerCase().includes('truck') ? 'truck' :
+                       cat.name.toLowerCase().includes('ag') || cat.name.toLowerCase().includes('equip') ? 'ag' :
+                       cat.name.toLowerCase().includes('comm') ? 'commercial' :
+                       cat.name.toLowerCase().includes('res') ? 'residential' : cat.name.toLowerCase();
+
+        const btn = document.createElement('button');
+        btn.textContent = cat.name;
+        btn.dataset.filterId = filterId;
+        btn.className = `filter-btn px-5 py-2 rounded-full border text-sm font-medium whitespace-nowrap ${filterId === activeFilter ? 'active border-yellow-400' : 'border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:border-zinc-300'}`;
+        
+        btn.onclick = () => {
+          activeFilter = filterId;
+          Array.from(container.children).forEach(b => b.classList.remove('active', 'border-yellow-400'));
+          btn.classList.add('active', 'border-yellow-400');
+          filterGallery();
+        };
+        
+        container.appendChild(btn);
+      });
+    }
+
+    function filterGallery() {
+      // Always pull latest from admin-managed storage
+      loadGalleryData();
+
+      // Read current control values
+      searchTerm = document.getElementById('search-input').value || '';
+      vehicleFilter = document.getElementById('vehicle-filter').value;
+      sortBy = document.getElementById('sort-select').value;
+
+      let items = [...GALLERY_ITEMS];
+
+      // Category filter
+      if (activeFilter !== 'all') {
+        if (activeFilter === 'truck') {
+          items = items.filter(i => i.vehicleType === 'truck' || i.vehicleType === 'suv');
+        } else {
+          items = items.filter(item => item.category === activeFilter);
+        }
+      }
+
+      // Vehicle type filter
+      if (vehicleFilter === 'Cars') {
+        items = items.filter(i => i.vehicleType === 'car');
+      } else if (vehicleFilter === 'Trucks & SUVs') {
+        items = items.filter(i => i.vehicleType === 'truck' || i.vehicleType === 'suv');
+      } else if (vehicleFilter === 'Other') {
+        items = items.filter(i => i.vehicleType === 'other');
+      }
+
+      // Search
+      if (searchTerm.trim()) {
+        const term = searchTerm.toLowerCase();
+        items = items.filter(item =>
+          item.title.toLowerCase().includes(term) ||
+          item.desc.toLowerCase().includes(term)
+        );
+      }
+
+      // Sort
+      if (sortBy === 'darkest') {
+        items.sort((a, b) => {
+          const da = parseInt(a.darkness) || 50;
+          const db = parseInt(b.darkness) || 50;
+          return db - da;
+        });
+      }
+
+      currentFiltered = items;
+      renderGalleryGrid();
+    }
+
+    function renderGalleryGrid() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
+
+      const countEl = document.getElementById('result-count');
+      countEl.textContent = currentFiltered.length;
+
+      if (currentFiltered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500">No projects match your filters. Try clearing the search.</div>`;
+        return;
+      }
+
+      currentFiltered.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'gallery-card group relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-200 cursor-pointer bg-white';
+        
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.08]" loading="lazy">
+          <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/60 to-black/95"></div>
+          
+          <div class="absolute bottom-0 left-0 p-6 text-zinc-900">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="uppercase text-yellow-600 text-xs tracking-widest">${item.category}</span>
+              <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded">${item.darkness}</span>
+            </div>
+            <div class="font-semibold text-xl tracking-tight leading-tight pr-8 line-clamp-2">${item.title}</div>
+            <div class="text-sm text-zinc-600 mt-1 line-clamp-1">${item.desc}</div>
+          </div>
+
+          <div class="absolute top-4 right-4 bg-white/90 p-2 rounded-xl text-zinc-600 group-hover:text-zinc-900 transition border border-zinc-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
+          </div>
+        `;
+        
+        card.onclick = () => openLightbox(item.id);
+        grid.appendChild(card);
+      });
+    }
+
+    function openLightbox(itemId) {
+      const idx = currentFiltered.findIndex(i => i.id === itemId);
+      if (idx === -1) return;
+
+      selectedIndex = idx;
+      updateLightbox();
+      document.getElementById('lightbox').classList.remove('hidden');
+      document.getElementById('lightbox').classList.add('flex');
+      
+      // Keyboard support
+      document.addEventListener('keydown', lightboxKeyHandler);
+    }
+
+    function updateLightbox() {
+      const item = currentFiltered[selectedIndex];
+      if (!item) return;
+
+      document.getElementById('lightbox-image').src = item.img;
+      document.getElementById('lightbox-title').textContent = item.title;
+      document.getElementById('lightbox-desc').textContent = item.desc;
+      document.getElementById('lightbox-category').textContent = item.category;
+      document.getElementById('lightbox-darkness').textContent = item.darkness + ' VLT';
+      document.getElementById('lightbox-counter').textContent = `${selectedIndex + 1} / ${currentFiltered.length}`;
+    }
+
+    function navigateLightbox(direction) {
+      if (selectedIndex === null) return;
+      selectedIndex = (selectedIndex + direction + currentFiltered.length) % currentFiltered.length;
+      updateLightbox();
+    }
+
+    function lightboxKeyHandler(e) {
+      if (document.getElementById('lightbox').classList.contains('hidden')) {
+        document.removeEventListener('keydown', lightboxKeyHandler);
+        return;
+      }
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') navigateLightbox(1);
+      if (e.key === 'ArrowLeft') navigateLightbox(-1);
+    }
+
+    function closeLightbox() {
+      const lb = document.getElementById('lightbox');
+      lb.classList.remove('flex');
+      lb.classList.add('hidden');
+      document.removeEventListener('keydown', lightboxKeyHandler);
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('m-icon');
+      const close = document.getElementById('m-close');
+      
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        icon.classList.add('hidden');
+        close.classList.remove('hidden');
+      } else {
+        menu.classList.add('hidden');
+        icon.classList.remove('hidden');
+        close.classList.add('hidden');
+      }
+    }
+
+    function initGallery() {
+      initYear();
+      
+      // Load dynamic data managed by admin.html
+      loadGalleryData();
+      
+      // Initial category buttons
+      initCategoryFilters();
+
+      // Initial filters from the live data
+      currentFiltered = [...GALLERY_ITEMS];
+      
+      // Render first grid
+      renderGalleryGrid();
+
+      // Default sort select value
+      document.getElementById('sort-select').value = sortBy;
+      
+      // Allow enter in search to do nothing special (already live)
+
+      // Initial active pill style
+      setTimeout(() => {
+        const firstBtn = document.querySelector('#category-filters button');
+        if (firstBtn) firstBtn.classList.add('active', 'border-yellow-400');
+      }, 10);
+
+      console.log('%c[Gallery] Now powered by shared admin data layer (localStorage).', 'color:#888');
+    }
+
+    window.onload = initGallery;
+  </script>
+</body>
+</html>

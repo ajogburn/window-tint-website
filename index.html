@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joe's Window Tinting | Clarksville, TN | Est. 1981</title>
+  <meta name="description" content="Joe's Window Tinting — Serving Clarksville, TN since 1981. Professional automotive, residential, commercial, and agriculture equipment window tinting. Ceramic &amp; carbon films. Call (931) 896-6453 for a free quote.">
+  <link rel="icon" type="image/svg+xml" href="public/favicon.svg">
+  
+  <!-- Tailwind CSS via CDN - zero build step, easy to understand and customize -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/common.js"></script>
+  <script src="js/gallery-data.js"></script>
+  
+  <style>
+    /* Custom styles to match the original premium light design exactly */
+    :root {
+      --accent: #facc15;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid #e4e4e7;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, #facc15, #eab308);
+      border-radius: 3px;
+    }
+
+    .service-card, .gallery-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.2s;
+      background-color: white;
+      border-color: #e4e4e7;
+    }
+    .service-card:hover, .gallery-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+      border-color: #facc15;
+    }
+
+    .price-display {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .filter-btn {
+      transition: all 0.15s ease;
+      background-color: white;
+      border-color: #e4e4e7;
+      color: #3f3f46;
+    }
+    .filter-btn.active {
+      background-color: #facc15;
+      color: #18181b;
+      border-color: #facc15;
+    }
+
+    .input {
+      background-color: white;
+      border: 1px solid #d4d4d8;
+      transition: all 0.15s ease;
+      color: #18181b;
+    }
+    .input:focus {
+      border-color: #facc15;
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.12);
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: #facc15;
+      color: #18181b;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .btn-primary:hover {
+      background-color: #eab308;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      border: 1px solid #d4d4d8;
+      color: #3f3f46;
+      transition: all 0.15s ease;
+    }
+    .btn-secondary:hover {
+      background-color: #f4f4f5;
+      border-color: #a1a1aa;
+      color: #18181b;
+    }
+
+    .tint-option {
+      transition: all 0.15s ease;
+      background-color: white;
+    }
+    .tint-option.selected {
+      border-color: #facc15;
+      box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.15);
+    }
+
+    .nav-link {
+      transition: color 0.15s ease;
+    }
+    .nav-link:hover {
+      color: #18181b;
+    }
+
+    .modal {
+      animation: modalEnter 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    @keyframes modalEnter {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .accordion-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #e4e4e7;
+    }
+  </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 min-h-screen overflow-x-hidden">
+  
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-xl z-50 border-b border-zinc-200">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <!-- Logo -->
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-yellow-400 rounded-lg flex items-center justify-center">
+          <span class="text-zinc-950 font-black text-xl tracking-tighter">JOE</span>
+        </div>
+        <div>
+          <div class="text-2xl font-bold text-zinc-900 tracking-tight">Joe's Window Tinting</div>
+          <div class="text-[10px] text-zinc-500 -mt-1">EST 1981 • CLARKSVILLE, TN</div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-9 text-sm font-medium">
+        <button onclick="scrollToSection('services')" class="nav-link text-zinc-600">Services</button>
+        <button onclick="scrollToSection('quote-section')" class="nav-link text-zinc-600">Quote</button>
+        <button onclick="scrollToSection('testimonials')" class="nav-link text-zinc-600">Reviews</button>
+        <button onclick="scrollToSection('contact')" class="nav-link text-zinc-600">Contact</button>
+        <a href="gallery.html" class="nav-link text-zinc-600 hover:text-zinc-900">Gallery</a>
+      </div>
+
+      <div class="hidden md:flex items-center gap-4">
+        <a href="tel:9318966453" class="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+          (931) 896-6453
+        </a>
+        <button onclick="scrollToSection('quote-section')" 
+                class="btn-primary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
+          Get Instant Quote
+        </button>
+      </div>
+
+      <!-- Mobile Nav -->
+      <div class="flex md:hidden items-center gap-3">
+        <a href="tel:9318966453" class="p-2.5 rounded-full bg-zinc-100 text-yellow-500">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+        </a>
+        <button id="mobile-menu-btn"
+                onclick="toggleMobileMenu()"
+                class="p-2.5 rounded-lg bg-zinc-100 text-zinc-700"
+                aria-label="Toggle menu">
+          <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg id="close-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6h12v12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Panel -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-zinc-200 bg-white px-6 py-6">
+      <div class="flex flex-col gap-1 text-sm">
+        <button onclick="scrollToSection('services'); closeMobileMenu()" class="text-left py-2.5 text-zinc-600">Services</button>
+        <button onclick="scrollToSection('quote-section'); closeMobileMenu()" class="text-left py-2.5 text-zinc-600">Get a Quote</button>
+        <button onclick="scrollToSection('testimonials'); closeMobileMenu()" class="text-left py-2.5 text-zinc-600">Reviews</button>
+        <button onclick="scrollToSection('contact'); closeMobileMenu()" class="text-left py-2.5 text-zinc-600">Contact</button>
+        <a href="gallery.html" class="py-2.5 text-yellow-600 font-medium">View Full Gallery →</a>
+        
+        <div class="pt-3 mt-2 border-t">
+          <a href="tel:9318966453" class="block py-2 text-yellow-600 font-medium">(931) 896-6453</a>
+          <button onclick="scrollToSection('quote-section'); closeMobileMenu()" 
+                  class="btn-primary w-full py-3 rounded-full mt-3 text-center">Get Instant Quote</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="relative min-h-[100dvh] flex items-center justify-center pt-16 overflow-hidden bg-white">
+    <!-- Subtle dot pattern -->
+    <div class="absolute inset-0 bg-[radial-gradient(#e4e4e7_0.8px,transparent_1px)] bg-[length:4px_4px]"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-white via-white to-zinc-50"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-yellow-100 border border-yellow-200 text-xs tracking-[3px] font-semibold text-yellow-700 mb-6">
+        CLARKSVILLE, TENNESSEE • EST. 1981
+      </div>
+
+      <h1 class="text-6xl md:text-7xl lg:text-[82px] leading-[0.92] font-bold tracking-tighter text-zinc-900 mb-6">
+        TINTING DONE RIGHT<br>SINCE 1981.
+      </h1>
+
+      <p class="max-w-xl mx-auto text-xl text-zinc-600 mb-10">
+        Family-owned and operated. Ceramic window film for cars, trucks, homes, businesses, 
+        and agriculture equipment across Middle Tennessee.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="scrollToSection('quote-section')"
+                class="btn-primary group flex items-center justify-center gap-3 px-9 py-4 text-lg rounded-2xl w-full sm:w-auto">
+          Get Your Instant Quote
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:translate-x-0.5 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7m-4 0l7-7-7-7" />
+          </svg>
+        </button>
+        <a href="gallery.html"
+           class="btn-secondary flex items-center justify-center gap-3 px-8 py-4 text-lg rounded-2xl w-full sm:w-auto">
+          View Our Work
+        </a>
+      </div>
+
+      <!-- Trust bar -->
+      <div class="mt-16 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-sm text-zinc-500">
+        <div class="flex items-center gap-2">
+          <div class="flex -space-x-1">
+            <div class="w-6 h-6 bg-zinc-200 rounded-full border border-white"></div>
+            <div class="w-6 h-6 bg-zinc-200 rounded-full border border-white"></div>
+            <div class="w-6 h-6 bg-zinc-200 rounded-full border border-white"></div>
+          </div>
+          <span>Thousands of Vehicles &amp; Projects</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-yellow-500 fill-yellow-400" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <span>Trusted for over 40 years</span>
+        </div>
+        <div>Ceramic • Carbon • Security Film</div>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div onclick="scrollToSection('services')" 
+         class="absolute bottom-10 left-1/2 -translate-x-1/2 text-xs tracking-widest text-zinc-400 flex flex-col items-center gap-1 cursor-pointer hover:text-zinc-500 transition">
+      SCROLL TO EXPLORE
+      <div class="h-px w-8 bg-zinc-300"></div>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICES ==================== -->
+  <section id="services" class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-center mb-12">
+      <div class="text-yellow-600 text-xs tracking-[3px] font-semibold mb-3">WHAT WE DO BEST</div>
+      <h2 class="section-title text-5xl font-bold tracking-tighter">Expert Tinting &amp; Protection</h2>
+      <p class="mt-4 text-xl text-zinc-600 max-w-md mx-auto">
+        Professional installation with premium films that actually perform.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Service 1 -->
+      <div class="service-card group p-8 rounded-3xl border border-zinc-200 bg-white flex flex-col">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2" /></svg>
+        </div>
+        <h3 class="text-2xl font-semibold tracking-tight mb-3">Automotive Window Tinting</h3>
+        <p class="text-zinc-600 leading-relaxed flex-1">Ceramic and carbon films for cars, trucks, and SUVs. Maximum heat rejection, privacy, and UV protection.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Cars</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Trucks</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">SUVs</span>
+        </div>
+        <div class="mt-7 pt-6 border-t border-zinc-200 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-zinc-500">STARTING AT</div>
+            <div class="font-semibold text-yellow-600 text-xl tracking-tight">$265</div>
+          </div>
+          <button onclick="selectServiceForQuote(this)" class="text-sm font-medium text-zinc-700 border border-zinc-300 px-5 py-2 rounded-full hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition">Select for Quote</button>
+        </div>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="service-card group p-8 rounded-3xl border border-zinc-200 bg-white flex flex-col">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 8.944 11.922a11.956 11.956 0 01-1.926-.344" /></svg>
+        </div>
+        <h3 class="text-2xl font-semibold tracking-tight mb-3">Paint Protection Film (PPF)</h3>
+        <p class="text-zinc-600 leading-relaxed flex-1">Self-healing clear bra that protects paint from rock chips and road debris. Full front or complete vehicle packages.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Clear Bra</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Self-healing</span>
+        </div>
+        <div class="mt-7 pt-6 border-t border-zinc-200 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-zinc-500">STARTING AT</div>
+            <div class="font-semibold text-yellow-600 text-xl tracking-tight">$650</div>
+          </div>
+          <button onclick="selectServiceForQuote(this)" class="text-sm font-medium text-zinc-700 border border-zinc-300 px-5 py-2 rounded-full hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition">Select for Quote</button>
+        </div>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="service-card group p-8 rounded-3xl border border-zinc-200 bg-white flex flex-col">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+        </div>
+        <h3 class="text-2xl font-semibold tracking-tight mb-3">Ceramic Coating</h3>
+        <p class="text-zinc-600 leading-relaxed flex-1">Hydrophobic 9H ceramic coating for incredible gloss and easier maintenance on any vehicle.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">9H Hardness</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Long-term</span>
+        </div>
+        <div class="mt-7 pt-6 border-t border-zinc-200 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-zinc-500">STARTING AT</div>
+            <div class="font-semibold text-yellow-600 text-xl tracking-tight">$450</div>
+          </div>
+          <button onclick="selectServiceForQuote(this)" class="text-sm font-medium text-zinc-700 border border-zinc-300 px-5 py-2 rounded-full hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition">Select for Quote</button>
+        </div>
+      </div>
+
+      <!-- Service 4 -->
+      <div class="service-card group p-8 rounded-3xl border border-zinc-200 bg-white flex flex-col">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1v-5m6 0v5a1 1 0 01-1-1v-5m6 0v5a1 1 0 01-1-1" /></svg>
+        </div>
+        <h3 class="text-2xl font-semibold tracking-tight mb-3">Residential Window Tinting</h3>
+        <p class="text-zinc-600 leading-relaxed flex-1">Energy-saving ceramic film for homes. Reduce heat, glare, and protect furniture while keeping your view.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Homes</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Energy Savings</span>
+        </div>
+        <div class="mt-7 pt-6 border-t border-zinc-200 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-zinc-500">STARTING AT</div>
+            <div class="font-semibold text-yellow-600 text-xl tracking-tight">$6/sqft</div>
+          </div>
+          <button onclick="selectServiceForQuote(this)" class="text-sm font-medium text-zinc-700 border border-zinc-300 px-5 py-2 rounded-full hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition">Select for Quote</button>
+        </div>
+      </div>
+
+      <!-- Service 5 -->
+      <div class="service-card group p-8 rounded-3xl border border-zinc-200 bg-white flex flex-col">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+        </div>
+        <h3 class="text-2xl font-semibold tracking-tight mb-3">Commercial &amp; Office Tinting</h3>
+        <p class="text-zinc-600 leading-relaxed flex-1">Professional tinting for storefronts, offices, schools, and medical buildings. Comfort + security film options.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Security Film</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Commercial</span>
+        </div>
+        <div class="mt-7 pt-6 border-t border-zinc-200 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-zinc-500">STARTING AT</div>
+            <div class="font-semibold text-yellow-600 text-xl tracking-tight">Custom quote</div>
+          </div>
+          <button onclick="selectServiceForQuote(this)" class="text-sm font-medium text-zinc-700 border border-zinc-300 px-5 py-2 rounded-full hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition">Select for Quote</button>
+        </div>
+      </div>
+
+      <!-- Service 6 -->
+      <div class="service-card group p-8 rounded-3xl border border-zinc-200 bg-white flex flex-col">
+        <div class="w-12 h-12 rounded-2xl bg-yellow-100 text-yellow-600 flex items-center justify-center mb-6 group-hover:bg-yellow-400 group-hover:text-zinc-950 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+        </div>
+        <h3 class="text-2xl font-semibold tracking-tight mb-3">Agriculture &amp; Equipment</h3>
+        <p class="text-zinc-600 leading-relaxed flex-1">Specialized tinting for tractors, combines, sprayers, and other ag equipment cabs. Keeps operators cooler and safer.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Ag Equipment</span>
+          <span class="px-3 py-1 text-xs bg-zinc-100 rounded-full border border-zinc-200 text-zinc-600">Tractors</span>
+        </div>
+        <div class="mt-7 pt-6 border-t border-zinc-200 flex items-center justify-between">
+          <div>
+            <div class="text-xs text-zinc-500">STARTING AT</div>
+            <div class="font-semibold text-yellow-600 text-xl tracking-tight">Custom quote</div>
+          </div>
+          <button onclick="selectServiceForQuote(this)" class="text-sm font-medium text-zinc-700 border border-zinc-300 px-5 py-2 rounded-full hover:bg-zinc-900 hover:text-white active:bg-zinc-800 transition">Select for Quote</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-10 text-center text-sm text-zinc-500">
+      All automotive installs include lifetime warranty on ceramic and carbon films.
+    </div>
+  </section>
+
+  <!-- ==================== QUOTE CALCULATOR ==================== -->
+  <section id="quote-section" class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="text-center mb-10">
+      <div class="inline-block px-4 py-1 text-xs tracking-[3px] font-semibold text-yellow-700 bg-yellow-100 rounded-full mb-3">
+        BUILD YOUR OWN PRICE
+      </div>
+      <h2 class="text-5xl font-bold tracking-tighter text-zinc-900">Get an Accurate Estimate in Seconds</h2>
+      <p class="text-xl text-zinc-600 mt-3 max-w-lg mx-auto">
+        Choose your vehicle or equipment, film type, darkness, and add-ons. Prices update live.
+      </p>
+    </div>
+
+    <div class="max-w-5xl mx-auto">
+      <div class="glass rounded-3xl p-8 md:p-10 border border-zinc-200">
+        
+        <div class="flex items-center gap-3 mb-8">
+          <div class="p-3 bg-yellow-400/10 rounded-2xl">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+          </div>
+          <div>
+            <div class="font-semibold text-2xl tracking-tight">Instant Price Calculator</div>
+            <div class="text-sm text-zinc-500">Real-time estimates • No obligation</div>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-5 gap-8">
+          <!-- Controls -->
+          <div class="lg:col-span-3 space-y-8">
+            
+            <!-- Vehicle Type -->
+            <div>
+              <div class="flex items-center gap-2 text-sm font-semibold mb-3 text-zinc-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2" /></svg>
+                VEHICLE TYPE
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="vehicle-options">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Film Type -->
+            <div>
+              <div class="text-sm font-semibold mb-3 text-zinc-400">FILM TYPE</div>
+              <div class="space-y-2" id="tint-options">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Darkness -->
+            <div>
+              <div class="flex items-baseline justify-between mb-3">
+                <div class="text-sm font-semibold text-zinc-400">DARKNESS LEVEL (VLT %)</div>
+                <div id="darkness-label" class="text-xs px-3 py-1 rounded-full bg-zinc-900 text-yellow-400 font-mono">20% VLT</div>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="darkness-options">
+                <!-- Populated by JS -->
+              </div>
+              <p class="text-xs text-amber-500/80 mt-2">
+                Note: Tennessee law allows 35% VLT on front side windows for most vehicles (darker allowed on rear). We’ll always advise you on legal limits.
+              </p>
+            </div>
+
+            <!-- Add-ons -->
+            <div>
+              <div class="text-sm font-semibold mb-3 text-zinc-400">ADD-ONS</div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="addon-options">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Price Panel -->
+          <div class="lg:col-span-2">
+            <div class="sticky top-24">
+              <div class="bg-white rounded-3xl p-7 border border-zinc-200 shadow-sm">
+                <div class="uppercase tracking-[2px] text-xs text-zinc-500 mb-1">YOUR ESTIMATE</div>
+                
+                <div class="flex items-baseline gap-1 mb-6">
+                  <div id="price-total" class="price-display text-7xl font-bold tracking-[-4.5px] text-zinc-900">$265</div>
+                  <div class="text-zinc-500">USD</div>
+                </div>
+
+                <div class="space-y-3 text-sm mb-8 border-t border-zinc-200 pt-5">
+                  <div class="flex justify-between">
+                    <span class="text-zinc-500" id="price-base-label">Base package (Sedan / Coupe)</span>
+                    <span class="font-medium text-zinc-800" id="price-base">$265</span>
+                  </div>
+                  <div id="price-addons-row" class="flex justify-between hidden">
+                    <span class="text-zinc-500">Add-ons</span>
+                    <span class="font-medium text-zinc-800" id="price-addons">+$0</span>
+                  </div>
+                  <div class="pt-3 mt-1 border-t border-zinc-200 flex justify-between font-semibold">
+                    <span>Total Today</span>
+                    <span id="price-total-small" class="text-yellow-500">$265</span>
+                  </div>
+                </div>
+
+                <button onclick="useQuoteInContact()" 
+                        class="w-full py-4 rounded-2xl bg-yellow-400 text-zinc-950 font-semibold text-sm tracking-wider hover:bg-yellow-500 active:bg-yellow-400 transition flex items-center justify-center gap-2">
+                  USE THIS QUOTE IN CONTACT FORM
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                </button>
+
+                <p class="text-center text-xs text-zinc-500 mt-4">
+                  Price includes professional installation &amp; lifetime warranty on ceramic film.
+                </p>
+              </div>
+
+              <div class="text-xs text-center text-zinc-500 mt-4">
+                Prices are estimates. Final quote may vary slightly based on vehicle specifics.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== GALLERY TEASER ==================== -->
+  <section class="max-w-7xl mx-auto px-6 pb-16">
+    <div class="glass rounded-3xl p-10 md:p-14 text-center border border-zinc-200">
+      <div class="text-yellow-600 text-xs tracking-[3px] font-semibold mb-2">HUNDREDS OF VEHICLES</div>
+      <h3 class="text-4xl font-bold tracking-tighter mb-3 text-zinc-900">See Our Work</h3>
+      <p class="text-zinc-600 max-w-md mx-auto mb-6">
+        From daily drivers to work trucks, classic cars, commercial buildings, and agriculture equipment — 
+        we’ve done it all since 1981.
+      </p>
+      <a href="gallery.html" 
+         class="inline-block btn-primary px-8 py-3.5 rounded-2xl text-base">
+        Browse the Full Gallery →
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-200">
+    <div class="grid lg:grid-cols-12 gap-x-12 gap-y-12 items-center">
+      <div class="lg:col-span-5">
+        <div class="text-yellow-600 text-xs tracking-[3px] font-semibold mb-3">OUR STORY</div>
+        <h2 class="text-5xl font-bold tracking-tighter leading-none mb-6 text-zinc-900">
+          Serving Clarksville<br>since 1981.
+        </h2>
+        <p class="text-xl text-zinc-600">
+          What started in 1981 is still going strong. We’ve tinted everything from first cars 
+          to farm tractors to entire office buildings. Quality work and honest pricing — that’s what 
+          keeps people coming back generation after generation.
+        </p>
+
+        <div class="mt-8 grid grid-cols-2 gap-4">
+          <div class="stat-card border border-zinc-200 rounded-2xl px-6 py-5">
+            <div class="text-4xl font-bold tracking-tighter text-yellow-600">44</div>
+            <div class="text-sm mt-1 text-zinc-600">Years in Business</div>
+          </div>
+          <div class="stat-card border border-zinc-200 rounded-2xl px-6 py-5">
+            <div class="text-4xl font-bold tracking-tighter text-yellow-600">4,000+</div>
+            <div class="text-sm mt-1 text-zinc-600">Vehicles &amp; Projects</div>
+          </div>
+          <div class="stat-card border border-zinc-200 rounded-2xl px-6 py-5">
+            <div class="text-4xl font-bold tracking-tighter text-yellow-600">98%</div>
+            <div class="text-sm mt-1 text-zinc-600">Referral Rate</div>
+          </div>
+          <div class="stat-card border border-zinc-200 rounded-2xl px-6 py-5">
+            <div class="text-4xl font-bold tracking-tighter text-yellow-600">5.0</div>
+            <div class="text-sm mt-1 text-zinc-600">Average Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="glass p-7 rounded-3xl flex gap-5">
+            <div class="shrink-0 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+            </div>
+            <div>
+              <div class="font-semibold text-lg text-zinc-900">Est. 1981</div>
+              <div class="text-zinc-600 mt-1 leading-snug">Over four decades of experience tinting in Middle Tennessee.</div>
+            </div>
+          </div>
+          <div class="glass p-7 rounded-3xl flex gap-5">
+            <div class="shrink-0 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 8.944 11.922a11.956 11.956 0 01-1.926-.344" /></svg>
+            </div>
+            <div>
+              <div class="font-semibold text-lg text-zinc-900">Premium Films Only</div>
+              <div class="text-zinc-600 mt-1 leading-snug">Ceramic, carbon, and security films with real warranties.</div>
+            </div>
+          </div>
+          <div class="glass p-7 rounded-3xl flex gap-5">
+            <div class="shrink-0 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+              <div class="font-semibold text-lg text-zinc-900">Fast Turnaround</div>
+              <div class="text-zinc-600 mt-1 leading-snug">Most automotive jobs completed same day. Mobile service available.</div>
+            </div>
+          </div>
+          <div class="glass p-7 rounded-3xl flex gap-5">
+            <div class="shrink-0 mt-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 01-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </div>
+            <div>
+              <div class="font-semibold text-lg text-zinc-900">Family Owned</div>
+              <div class="text-zinc-600 mt-1 leading-snug">Joe has been hands-on since day one. Local and trusted.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TESTIMONIALS ==================== -->
+  <section id="testimonials" class="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-200">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-y-4">
+      <div>
+        <div class="text-yellow-600 text-xs tracking-[3px] font-semibold mb-3">REAL CUSTOMERS</div>
+        <h2 class="section-title text-5xl font-bold tracking-tighter text-zinc-900">What People Say</h2>
+      </div>
+      <button onclick="toggleReviewForm()" 
+              class="btn-secondary flex items-center gap-2 self-start md:self-auto px-5 py-2.5 rounded-2xl text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+        Leave a Review
+      </button>
+    </div>
+
+    <!-- Add Review Form -->
+    <div id="review-form" class="hidden mb-10">
+      <form onsubmit="submitReview(event)" class="glass p-8 rounded-3xl border border-zinc-200 max-w-2xl">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input id="review-name" class="input rounded-2xl px-5 py-3" placeholder="Your name" required>
+          <input id="review-vehicle" class="input rounded-2xl px-5 py-3" placeholder="Vehicle or location (optional)">
+        </div>
+
+        <div class="mt-4">
+          <div class="text-xs text-zinc-400 mb-2">YOUR RATING</div>
+          <div class="flex gap-1" id="rating-stars">
+            <!-- JS populated stars -->
+          </div>
+        </div>
+
+        <textarea id="review-text" class="input mt-4 w-full rounded-3xl px-5 py-4 h-28 resize-y min-h-[110px]" 
+                  placeholder="Tell us about your experience..." required></textarea>
+
+        <div class="flex gap-3 mt-4">
+          <button type="submit" class="btn-primary px-8 py-3 rounded-2xl">Post Review</button>
+          <button type="button" onclick="toggleReviewForm()" class="btn-secondary px-6 py-3 rounded-2xl">Cancel</button>
+        </div>
+        <p class="text-xs text-zinc-500 mt-3">This is a demo. Reviews are saved in your browser.</p>
+      </form>
+    </div>
+
+    <!-- Reviews Grid -->
+    <div id="reviews-grid" class="grid md:grid-cols-3 gap-6">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </section>
+
+  <!-- ==================== FAQ ==================== -->
+  <section class="max-w-3xl mx-auto px-6 py-20 border-t border-zinc-200">
+    <div class="text-center mb-10">
+      <div class="text-yellow-600 text-xs tracking-[3px] font-semibold mb-3">QUESTIONS?</div>
+      <h2 class="section-title text-5xl font-bold tracking-tighter text-zinc-900">Frequently Asked Questions</h2>
+    </div>
+
+    <div class="space-y-2" id="faq-list">
+      <!-- Populated by JS -->
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT ==================== -->
+  <section id="contact" class="max-w-7xl mx-auto px-6 py-20 border-t border-zinc-200">
+    <div class="grid lg:grid-cols-2 gap-12">
+      <!-- Info -->
+      <div>
+        <div class="text-yellow-600 text-xs tracking-[3px] font-semibold mb-3">LET'S GET STARTED</div>
+        <h2 class="text-5xl font-bold tracking-tighter text-zinc-900">Book Your Tint or Protection Job</h2>
+        <p class="mt-4 text-xl text-zinc-600 max-w-md">
+          Fill out the form and we’ll get back to you the same day. Same-day appointments often available.
+        </p>
+
+        <div class="mt-10 space-y-6 text-sm">
+          <div class="flex gap-4">
+            <div class="mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+            </div>
+            <div>
+              <div class="font-medium text-zinc-900">Call or Text</div>
+              <a href="tel:9318966453" class="text-yellow-600 text-lg font-medium">(931) 896-6453</a>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2.009 2.009 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            </div>
+            <div>
+              <div class="font-medium text-zinc-900">Email</div>
+              <a href="mailto:joeswindowtinting2020@gmail.com" class="hover:underline">joeswindowtinting2020@gmail.com</a>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314-11.314z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            </div>
+            <div>
+              <div class="font-medium text-zinc-900">Location</div>
+              <div>Clarksville, Tennessee • Serving Middle TN</div>
+              <div class="text-xs text-zinc-500 mt-0.5">Mobile service available</div>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <div class="mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-600 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+              <div class="font-medium text-zinc-900">Hours</div>
+              <div>Mon–Fri: 8am – 6pm &nbsp;•&nbsp; Sat by appointment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div>
+        <div id="contact-success" class="hidden glass rounded-3xl p-10 text-center border border-green-200">
+          <div class="mx-auto w-16 h-16 rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-6 text-3xl">✓</div>
+          <div class="text-2xl font-semibold tracking-tight text-zinc-900">Thank you!</div>
+          <p class="mt-2 text-zinc-600">We received your request and will contact you shortly via text or call.</p>
+        </div>
+
+        <form id="contact-form" onsubmit="submitContactForm(event)" class="glass rounded-3xl p-8 md:p-9 border border-zinc-200 space-y-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs tracking-widest text-zinc-500 block mb-1.5">FULL NAME</label>
+              <input name="name" required class="input w-full rounded-2xl px-5 py-3" placeholder="Alex Rivera">
+            </div>
+            <div>
+              <label class="text-xs tracking-widest text-zinc-500 block mb-1.5">PHONE NUMBER</label>
+              <input name="phone" required type="tel" class="input w-full rounded-2xl px-5 py-3" placeholder="(931) 555-0192">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs tracking-widest text-zinc-500 block mb-1.5">EMAIL (OPTIONAL)</label>
+              <input name="email" type="email" class="input w-full rounded-2xl px-5 py-3" placeholder="you@email.com">
+            </div>
+            <div>
+              <label class="text-xs tracking-widest text-zinc-500 block mb-1.5">PREFERRED DATE</label>
+              <input name="date" type="date" class="input w-full rounded-2xl px-5 py-3">
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xs tracking-widest text-zinc-400 block mb-1.5">SERVICE</label>
+            <select name="service" class="input w-full rounded-2xl px-5 py-3 appearance-none">
+              <option>Automotive Window Tint</option>
+              <option>Paint Protection Film (PPF)</option>
+              <option>Ceramic Coating</option>
+              <option>Residential Window Film</option>
+              <option>Commercial / Office Tint</option>
+              <option>Headlight Restoration + Tint</option>
+              <option>Agriculture / Equipment Tint</option>
+              <option>Other / Custom Quote</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="text-xs tracking-widest text-zinc-400 block mb-1.5">DETAILS OR QUOTE REFERENCE</label>
+            <textarea name="message" rows="4" class="input w-full rounded-3xl px-5 py-4 resize-y" 
+                      placeholder="Tell us about your vehicle or project. If you used the calculator, the details are pre-filled here."></textarea>
+          </div>
+
+          <button type="submit" 
+                  class="w-full py-4 rounded-2xl btn-primary text-base">
+            REQUEST APPOINTMENT / QUOTE
+          </button>
+
+          <p class="text-[11px] text-center text-zinc-500">
+            We typically respond within 1–2 hours during business hours.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-zinc-200 bg-white">
+    <div class="max-w-7xl mx-auto px-6 py-14 text-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-y-6">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <div class="w-8 h-8 bg-yellow-400 rounded-md flex items-center justify-center">
+              <span class="text-zinc-950 font-black text-lg tracking-[-1.5px]">JOE</span>
+            </div>
+            <span class="font-semibold text-lg tracking-tight">Joe's Window Tinting</span>
+          </div>
+          <div class="text-zinc-500">Serving Clarksville &amp; Middle Tennessee since 1981</div>
+        </div>
+
+        <div class="flex flex-wrap gap-x-8 gap-y-1 text-zinc-500">
+          <a href="index.html" class="hover:text-zinc-900">Home</a>
+          <a href="gallery.html" class="hover:text-zinc-900">Gallery</a>
+          <a href="tel:9318966453" class="hover:text-zinc-900 font-medium text-yellow-600">(931) 896-6453</a>
+        </div>
+      </div>
+
+      <div class="h-px bg-zinc-200 my-9"></div>
+
+      <div class="flex flex-col md:flex-row gap-y-2 items-center justify-between text-xs text-zinc-500">
+        <div>© <span id="year"></span> Joe's Window Tinting. All rights reserved.</div>
+        <div class="flex gap-x-5">
+          <span>Lifetime Warranty on Ceramic Film</span>
+          <span>•</span>
+          <span>3M • LLumar • XPEL Certified</span>
+        </div>
+        <div>Serving Clarksville &amp; Middle Tennessee</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ==================== TAILWIND CONFIG ====================
+    function initTailwind() {
+      document.documentElement.style.setProperty('--accent', '#facc15');
+    }
+
+    // ==================== SMOOTH SCROLL ====================
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      
+      const navHeight = 80;
+      const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+      window.scrollTo({ top, behavior: 'smooth' });
+      
+      // Close mobile menu if open
+      closeMobileMenu();
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+      
+      const isHidden = menu.classList.contains('hidden');
+      if (isHidden) {
+        menu.classList.remove('hidden');
+        menuIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+      } else {
+        closeMobileMenu();
+      }
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const menuIcon = document.getElementById('menu-icon');
+      const closeIcon = document.getElementById('close-icon');
+      
+      menu.classList.add('hidden');
+      menuIcon.classList.remove('hidden');
+      closeIcon.classList.add('hidden');
+    }
+
+    // ==================== QUOTE CALCULATOR (VANILLA JS) ====================
+    const VEHICLES = [
+      { id: 'sedan', label: 'Sedan / Coupe', multiplier: 1.0, baseDesc: '2 front + 2 rear doors' },
+      { id: 'suv', label: 'SUV / Crossover', multiplier: 1.25, baseDesc: 'Full size windows' },
+      { id: 'truck', label: 'Pickup Truck', multiplier: 1.35, baseDesc: 'Crew cab + rear window' },
+      { id: 'van', label: 'Van / Minivan', multiplier: 1.55, baseDesc: 'Many windows' },
+    ];
+
+    const TINT_OPTIONS = [
+      { id: 'ceramic', label: 'Premium Ceramic', priceFactor: 1.0, desc: 'Best heat rejection & clarity. Lifetime warranty.' },
+      { id: 'carbon', label: 'Carbon Performance', priceFactor: 0.82, desc: 'Excellent color stability, no signal interference.' },
+      { id: 'dyed', label: 'Standard Dyed', priceFactor: 0.62, desc: 'Good value. Basic UV protection.' },
+    ];
+
+    const DARKNESS_LEVELS = [
+      { pct: 70, label: '70% (Light / Factory)', factor: 0.85 },
+      { pct: 35, label: '35% (Medium)', factor: 0.95 },
+      { pct: 20, label: '20% (Dark)', factor: 1.0 },
+      { pct: 5, label: '5% (Limo / Rear only)', factor: 1.08 },
+    ];
+
+    const ADDONS = [
+      { id: 'windshield', label: 'Windshield Strip (Brow)', price: 65 },
+      { id: 'sunroof', label: 'Sunroof / Moonroof', price: 85 },
+      { id: 'headlights', label: 'Headlight Tint', price: 95 },
+      { id: 'fullWindshield', label: 'Full Windshield Ceramic', price: 145 },
+    ];
+
+    const BASE_PRICES = { sedan: 265, suv: 295, truck: 315, van: 345 };
+
+    let quoteState = {
+      vehicle: 'sedan',
+      tintType: 'ceramic',
+      darkness: 20,
+      selectedAddons: []
+    };
+
+    function initQuoteCalculator() {
+      // Vehicle buttons
+      const vehicleContainer = document.getElementById('vehicle-options');
+      vehicleContainer.innerHTML = '';
+      VEHICLES.forEach(v => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `p-4 rounded-2xl border text-left transition-all ${v.id === quoteState.vehicle ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        btn.innerHTML = `<div class="font-semibold">${v.label}</div><div class="text-xs text-zinc-500 mt-1">${v.baseDesc}</div>`;
+        btn.onclick = () => {
+          quoteState.vehicle = v.id;
+          updateQuoteUI();
+        };
+        vehicleContainer.appendChild(btn);
+      });
+
+      // Tint options
+      const tintContainer = document.getElementById('tint-options');
+      tintContainer.innerHTML = '';
+      TINT_OPTIONS.forEach(t => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `w-full flex justify-between items-center p-4 rounded-2xl border transition-all text-left ${t.id === quoteState.tintType ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        btn.innerHTML = `
+          <div>
+            <div class="font-semibold">${t.label}</div>
+            <div class="text-sm text-zinc-500">${t.desc}</div>
+          </div>
+          ${t.id === quoteState.tintType ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7" /></svg>' : ''}
+        `;
+        btn.onclick = () => {
+          quoteState.tintType = t.id;
+          updateQuoteUI();
+        };
+        tintContainer.appendChild(btn);
+      });
+
+      // Darkness
+      const darkContainer = document.getElementById('darkness-options');
+      darkContainer.innerHTML = '';
+      DARKNESS_LEVELS.forEach(level => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `tint-option p-4 rounded-2xl border flex flex-col items-center text-center ${level.pct === quoteState.darkness ? 'selected border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        btn.innerHTML = `
+          <div class="font-mono text-3xl font-semibold tracking-tighter mb-1">${level.pct}%</div>
+          <div class="text-xs leading-tight text-zinc-400">${level.label.split('(')[0].trim()}</div>
+        `;
+        btn.onclick = () => {
+          quoteState.darkness = level.pct;
+          updateQuoteUI();
+        };
+        darkContainer.appendChild(btn);
+      });
+
+      // Addons
+      const addonContainer = document.getElementById('addon-options');
+      addonContainer.innerHTML = '';
+      ADDONS.forEach(addon => {
+        const isSel = quoteState.selectedAddons.includes(addon.id);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `flex items-center justify-between p-4 rounded-2xl border transition-all ${isSel ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-5 h-5 rounded border flex items-center justify-center ${isSel ? 'bg-yellow-400 border-yellow-400' : 'border-zinc-600'}">
+              ${isSel ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 10l7-7m0 0l7 7" /></svg>' : ''}
+            </div>
+            <span>${addon.label}</span>
+          </div>
+          <span class="font-mono text-sm text-yellow-500">+$${addon.price}</span>
+        `;
+        btn.onclick = () => {
+          if (quoteState.selectedAddons.includes(addon.id)) {
+            quoteState.selectedAddons = quoteState.selectedAddons.filter(a => a !== addon.id);
+          } else {
+            quoteState.selectedAddons.push(addon.id);
+          }
+          updateQuoteUI();
+        };
+        addonContainer.appendChild(btn);
+      });
+
+      updateQuoteUI();
+    }
+
+    function calculatePrice() {
+      const selectedVehicle = VEHICLES.find(v => v.id === quoteState.vehicle) || VEHICLES[0];
+      const selectedTint = TINT_OPTIONS.find(t => t.id === quoteState.tintType) || TINT_OPTIONS[0];
+      const selectedDark = DARKNESS_LEVELS.find(d => d.pct === quoteState.darkness) || DARKNESS_LEVELS[2];
+
+      let base = BASE_PRICES[quoteState.vehicle] || 280;
+      base = base * selectedTint.priceFactor;
+      base = base * selectedDark.factor;
+      base = base * selectedVehicle.multiplier;
+      base = Math.round(base);
+
+      const addonTotal = quoteState.selectedAddons.reduce((sum, id) => {
+        const addon = ADDONS.find(a => a.id === id);
+        return sum + (addon ? addon.price : 0);
+      }, 0);
+
+      return {
+        base: Math.round(base),
+        addons: addonTotal,
+        total: Math.round(base + addonTotal)
+      };
+    }
+
+    function updateQuoteUI() {
+      // Update vehicle selection styles
+      const vBtns = document.getElementById('vehicle-options').children;
+      Array.from(vBtns).forEach((btn, i) => {
+        const v = VEHICLES[i];
+        btn.className = `p-4 rounded-2xl border text-left transition-all ${v.id === quoteState.vehicle ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+      });
+
+      // Tint selection styles
+      const tBtns = document.getElementById('tint-options').children;
+      Array.from(tBtns).forEach((btn, i) => {
+        const t = TINT_OPTIONS[i];
+        const isActive = t.id === quoteState.tintType;
+        btn.className = `w-full flex justify-between items-center p-4 rounded-2xl border transition-all text-left ${isActive ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        // Update checkmark if needed (simple re-init is easier but we do inline)
+      });
+
+      // Rebuild tint to ensure checkmark updates (simple approach for clarity)
+      const tintContainer = document.getElementById('tint-options');
+      tintContainer.innerHTML = '';
+      TINT_OPTIONS.forEach(t => {
+        const isActive = t.id === quoteState.tintType;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `w-full flex justify-between items-center p-4 rounded-2xl border transition-all text-left ${isActive ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        btn.innerHTML = `
+          <div><div class="font-semibold">${t.label}</div><div class="text-sm text-zinc-500">${t.desc}</div></div>
+          ${isActive ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 10l7-7m0 0l7 7" /></svg>' : ''}
+        `;
+        btn.onclick = () => { quoteState.tintType = t.id; updateQuoteUI(); };
+        tintContainer.appendChild(btn);
+      });
+
+      // Darkness
+      const dBtns = document.getElementById('darkness-options').children;
+      Array.from(dBtns).forEach((btn, i) => {
+        const lvl = DARKNESS_LEVELS[i];
+        btn.className = `tint-option p-4 rounded-2xl border flex flex-col items-center text-center ${lvl.pct === quoteState.darkness ? 'selected border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+      });
+
+      // Update darkness label
+      document.getElementById('darkness-label').textContent = `${quoteState.darkness}% VLT`;
+
+      // Addons
+      const addonContainer = document.getElementById('addon-options');
+      addonContainer.innerHTML = '';
+      ADDONS.forEach(addon => {
+        const isSel = quoteState.selectedAddons.includes(addon.id);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `flex items-center justify-between p-4 rounded-2xl border transition-all ${isSel ? 'border-yellow-400 bg-yellow-50' : 'border-zinc-200 hover:border-zinc-300'}`;
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-5 h-5 rounded border flex items-center justify-center ${isSel ? 'bg-yellow-400 border-yellow-400' : 'border-zinc-600'}">
+              ${isSel ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-zinc-950" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 10l7-7m0 0l7 7" /></svg>' : ''}
+            </div>
+            <span>${addon.label}</span>
+          </div>
+          <span class="font-mono text-sm text-yellow-500">+$${addon.price}</span>`;
+        btn.onclick = () => {
+          if (quoteState.selectedAddons.includes(addon.id)) {
+            quoteState.selectedAddons = quoteState.selectedAddons.filter(a => a !== addon.id);
+          } else {
+            quoteState.selectedAddons.push(addon.id);
+          }
+          updateQuoteUI();
+        };
+        addonContainer.appendChild(btn);
+      });
+
+      // Price calculations
+      const price = calculatePrice();
+      const selectedVehicle = VEHICLES.find(v => v.id === quoteState.vehicle);
+
+      document.getElementById('price-total').textContent = '$' + price.total;
+      document.getElementById('price-base').textContent = '$' + price.base;
+      document.getElementById('price-base-label').textContent = `Base package (${selectedVehicle.label})`;
+      document.getElementById('price-total-small').textContent = '$' + price.total;
+
+      const addonsRow = document.getElementById('price-addons-row');
+      if (price.addons > 0) {
+        addonsRow.classList.remove('hidden');
+        document.getElementById('price-addons').textContent = '+$' + price.addons;
+      } else {
+        addonsRow.classList.add('hidden');
+      }
+    }
+
+    function useQuoteInContact() {
+      const price = calculatePrice();
+      const selectedVehicle = VEHICLES.find(v => v.id === quoteState.vehicle);
+      const selectedTint = TINT_OPTIONS.find(t => t.id === quoteState.tintType);
+
+      const addonLabels = quoteState.selectedAddons.map(id => {
+        const a = ADDONS.find(x => x.id === id);
+        return a ? a.label : '';
+      }).filter(Boolean);
+
+      const message = `Quote request for Joe's Window Tinting:
+• ${selectedVehicle.label}
+• ${selectedTint.label} (${quoteState.darkness}% VLT)
+• Add-ons: ${addonLabels.length ? addonLabels.join(', ') : 'None'}
+• Estimated total: $${price.total}`;
+
+      // Prefill contact form
+      const form = document.getElementById('contact-form');
+      if (form) {
+        form.querySelector('textarea[name="message"]').value = message;
+        // Optionally set a service
+        const serviceSelect = form.querySelector('select[name="service"]');
+        if (serviceSelect) serviceSelect.value = 'Automotive Window Tint';
+      }
+
+      // Scroll to contact
+      const contactEl = document.getElementById('contact');
+      if (contactEl) {
+        const top = contactEl.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+
+      // Small visual feedback
+      setTimeout(() => {
+        const ta = form ? form.querySelector('textarea[name="message"]') : null;
+        if (ta) {
+          ta.style.transition = 'box-shadow .2s';
+          ta.style.boxShadow = '0 0 0 3px rgba(250,204,33,0.3)';
+          setTimeout(() => { if (ta) ta.style.boxShadow = ''; }, 1400);
+        }
+      }, 700);
+    }
+
+    function selectServiceForQuote(btn) {
+      // Simple behavior: scroll to quote. Could also preselect service type in future.
+      scrollToSection('quote-section');
+      // Optional: flash the quote section briefly
+      const quote = document.getElementById('quote-section');
+      quote.style.transition = 'background-color 0.2s';
+      quote.style.backgroundColor = '#fefce8';
+      setTimeout(() => {
+        quote.style.backgroundColor = '';
+      }, 650);
+    }
+
+    // ==================== TESTIMONIALS (live add) ====================
+    let reviews = [
+      { id: 1, name: "Marcus T.", vehicle: "2022 F-150", rating: 5, text: "Best tint job I’ve ever had. The ceramic is noticeably cooler and the install is flawless. AJ and his team are true pros.", date: "2 weeks ago" },
+      { id: 2, name: "Sarah K.", vehicle: "Home in Woodway", rating: 5, text: "They did our entire back of house. Temperature dropped 10 degrees inside. Super clean work and very professional.", date: "1 month ago" },
+      { id: 3, name: "David R.", vehicle: "2024 Tesla Model 3", rating: 5, text: "Took incredible care of the car. Zero dust, perfect edges, and the 5% rear looks killer. Will be back for PPF next year.", date: "3 weeks ago" }
+    ];
+
+    let currentRating = 5;
+
+    function loadReviews() {
+      const saved = localStorage.getItem('jt_reviews');
+      if (saved) {
+        try { reviews = JSON.parse(saved); } catch(e) {}
+      }
+    }
+
+    function saveReviews() {
+      localStorage.setItem('jt_reviews', JSON.stringify(reviews));
+    }
+
+    function renderReviews() {
+      const grid = document.getElementById('reviews-grid');
+      grid.innerHTML = '';
+      
+      reviews.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'glass p-7 rounded-3xl border border-zinc-200 flex flex-col';
+        
+        let stars = '';
+        for (let i = 0; i < r.rating; i++) {
+          stars += '<svg xmlns="http://www.w3.org/2000/svg" class="text-yellow-500 fill-yellow-400 w-4 h-4" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+        }
+        
+        card.innerHTML = `
+          <div class="flex gap-0.5 mb-4">${stars}</div>
+          <p class="text-[15px] leading-relaxed flex-1 text-zinc-700">“${r.text}”</p>
+          <div class="mt-6 pt-5 border-t border-zinc-200 text-sm flex items-center justify-between">
+            <div>
+              <div class="font-medium text-zinc-900">${r.name}</div>
+              <div class="text-xs text-zinc-500">${r.vehicle}</div>
+            </div>
+            <div class="text-xs text-zinc-500">${r.date}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function initReviewStars() {
+      const container = document.getElementById('rating-stars');
+      container.innerHTML = '';
+      
+      for (let n = 1; n <= 5; n++) {
+        const star = document.createElement('button');
+        star.type = 'button';
+        star.className = 'p-1';
+        star.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 ${n <= currentRating ? 'text-yellow-400 fill-yellow-400' : 'text-zinc-300'}" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
+        
+        star.onclick = () => {
+          currentRating = n;
+          initReviewStars(); // re-render stars
+        };
+        container.appendChild(star);
+      }
+    }
+
+    function toggleReviewForm() {
+      const form = document.getElementById('review-form');
+      const isHidden = form.classList.contains('hidden');
+      
+      if (isHidden) {
+        form.classList.remove('hidden');
+        initReviewStars();
+        // reset inputs
+        document.getElementById('review-name').value = '';
+        document.getElementById('review-vehicle').value = '';
+        document.getElementById('review-text').value = '';
+        currentRating = 5;
+        initReviewStars();
+      } else {
+        form.classList.add('hidden');
+      }
+    }
+
+    function submitReview(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('review-name').value.trim();
+      const vehicle = document.getElementById('review-vehicle').value.trim() || 'Customer';
+      const text = document.getElementById('review-text').value.trim();
+      
+      if (!name || !text) {
+        alert('Please fill out your name and review');
+        return;
+      }
+      
+      const newReview = {
+        id: Date.now(),
+        name,
+        vehicle,
+        rating: currentRating,
+        text,
+        date: 'Just now'
+      };
+      
+      reviews.unshift(newReview);
+      saveReviews();
+      renderReviews();
+      
+      // Hide form
+      document.getElementById('review-form').classList.add('hidden');
+      
+      // Success toast style message
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-zinc-900 text-white px-6 py-3 rounded-2xl text-sm shadow-xl z-[90]';
+      toast.textContent = 'Thank you! Your review is live (demo only)';
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2400);
+    }
+
+    // ==================== FAQ ACCORDION ====================
+    const FAQS = [
+      { q: "How long does window tint last?", a: "Premium ceramic films from 3M, LLumar, and XPEL come with a lifetime warranty against bubbling, cracking, and color change. Most customers get 8–12+ years of excellent performance." },
+      { q: "What’s the difference between ceramic and regular tint?", a: "Ceramic contains nano-particles that reject significantly more infrared heat without darkening the glass as much. It also doesn’t interfere with electronics, GPS, or radio signals like some metallic films." },
+      { q: "Is window tint legal in Tennessee?", a: "Front side windows must allow at least 35% visible light transmission (VLT). Rear side windows and the back glass can be any darkness. Windshield can have a 5-inch brow strip. We always inform you of legal limits." },
+      { q: "How long does installation take?", a: "Most cars are done in 2.5 – 4 hours. Larger vehicles, full PPF, or residential jobs take longer. We give you a realistic time when you book." },
+      { q: "Do you offer mobile service?", a: "Yes — we offer mobile service for most automotive jobs in the Clarksville area and surrounding communities. A small travel fee may apply for farther locations." },
+      { q: "What’s the warranty like?", a: "All our ceramic and carbon films include a written lifetime warranty on the film and labor. Residential and commercial films usually carry 10–15 year manufacturer warranties." }
+    ];
+
+    function initFAQ() {
+      const container = document.getElementById('faq-list');
+      container.innerHTML = '';
+      
+      FAQS.forEach((faq, index) => {
+        const item = document.createElement('div');
+        item.className = 'border border-zinc-200 rounded-2xl overflow-hidden bg-white';
+        
+        item.innerHTML = `
+          <button class="w-full flex items-center justify-between px-7 py-5 text-left hover:bg-zinc-50 transition" data-index="${index}">
+            <span class="font-medium pr-8">${faq.q}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="shrink-0 text-yellow-400 transition-transform w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          <div class="accordion-content px-7" style="max-height:0; opacity:0;">
+            <div class="pb-6 text-zinc-600 leading-relaxed">${faq.a}</div>
+          </div>
+        `;
+        
+        // Click handler
+        const btn = item.querySelector('button');
+        const content = item.querySelector('.accordion-content');
+        
+        btn.onclick = () => {
+          const isOpen = content.style.maxHeight !== '0px' && content.style.maxHeight !== '';
+          
+          // Close all
+          document.querySelectorAll('#faq-list .accordion-content').forEach(c => {
+            c.style.maxHeight = '0px';
+            c.style.opacity = '0';
+            c.parentElement.querySelector('svg').classList.remove('rotate-180');
+          });
+          
+          if (!isOpen) {
+            content.style.maxHeight = '200px';
+            content.style.opacity = '1';
+            btn.querySelector('svg').classList.add('rotate-180');
+          }
+        };
+        
+        container.appendChild(item);
+      });
+      
+      // Open first one by default
+      setTimeout(() => {
+        const firstContent = container.querySelector('.accordion-content');
+        if (firstContent) {
+          firstContent.style.maxHeight = '200px';
+          firstContent.style.opacity = '1';
+          const firstSvg = container.querySelector('svg');
+          if (firstSvg) firstSvg.classList.add('rotate-180');
+        }
+      }, 50);
+    }
+
+    // ==================== CONTACT FORM ====================
+    function initContactForm() {
+      // The form is handled by onsubmit="submitContactForm(event)"
+      // We also expose a helper if needed
+    }
+
+    async function submitContactForm(e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = Object.fromEntries(new FormData(form));
+      
+      if (!data.name || !data.phone) {
+        alert('Please enter your name and phone number');
+        return;
+      }
+      
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'SENDING REQUEST...';
+      
+      // Simulate network call
+      await new Promise(r => setTimeout(r, 850));
+      
+      // Persist to shared submissions store (visible in admin.html)
+      if (window.JoWTData && window.JoWTData.addSubmission) {
+        window.JoWTData.addSubmission({
+          name: data.name,
+          phone: data.phone,
+          email: data.email || '',
+          service: data.service || 'General',
+          message: data.message || '',
+          source: 'website-contact'
+        });
+      }
+      
+      console.log('Contact form submitted (saved to admin inbox):', data);
+      
+      // Show success
+      form.classList.add('hidden');
+      document.getElementById('contact-success').classList.remove('hidden');
+      
+      // Reset after delay
+      setTimeout(() => {
+        form.reset();
+        form.classList.remove('hidden');
+        document.getElementById('contact-success').classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+      }, 2400);
+    }
+
+    // ==================== INITIALIZATION ====================
+    function initYear() {
+      document.getElementById('year').textContent = new Date().getFullYear();
+    }
+
+    function initAll() {
+      initTailwind();
+      initYear();
+      
+      // Quote calculator
+      initQuoteCalculator();
+      
+      // Testimonials
+      loadReviews();
+      renderReviews();
+      
+      // FAQ
+      initFAQ();
+      
+      // Contact
+      initContactForm();
+      
+      // Optional: keyboard escape for any future modals (none on home)
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          const mobile = document.getElementById('mobile-menu');
+          if (!mobile.classList.contains('hidden')) closeMobileMenu();
+        }
+      });
+      
+      // Make sure mobile menu closes on resize to desktop
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          closeMobileMenu();
+        }
+      });
+      
+      // Welcome note in console for developers
+      console.log('%c[Static Site] Joe\'s Window Tinting — pure HTML/CSS/JS. Edit index.html and gallery.html directly.', 'color:#666');
+    }
+
+    // Boot
+    window.onload = initAll;
+  </script>
+</body>
+</html>
