@@ -9,6 +9,9 @@
   
   <!-- Tailwind CSS via CDN - zero build step, easy to understand and customize -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
   <script src="js/common.js"></script>
   <script src="js/gallery-data.js"></script>
   
@@ -861,9 +864,10 @@
       });
     }
 
-    function initAll() {
+    async function initAll() {
       initTailwind();
       initYear();
+      await window.JoWTData.init();
       initHomeGalleryPreview();
 
       // FAQ (static)

@@ -132,7 +132,7 @@
         <div class="mt-1.5 text-sm flex flex-wrap gap-x-3">
           <a href="gallery.html" target="_blank" class="underline hover:text-yellow-400">Live Gallery</a>
           <a href="index.html" target="_blank" class="underline hover:text-yellow-400">Homepage</a>
-          <a href="#" onclick="if (confirm('Reset gallery to original seed data?')) { localStorage.removeItem('jowt_gallery_items'); location.reload(); }" class="underline hover:text-red-400 text-xs">Reset Gallery</a>
+          <a href="#" onclick="refreshAll(); return false;" class="underline hover:text-yellow-400 text-xs">Sync from Cloud</a>
         </div>
       </div>
     </div>
@@ -160,7 +160,7 @@
   <div id="upload-modal" onclick="if (event.target.id === 'upload-modal') hideUploadModal()" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-[200] p-4">
     <div onclick="event.stopImmediatePropagation()" class="bg-[#161618] border border-zinc-700 w-full max-w-lg rounded-3xl p-7">
       <div class="font-semibold text-2xl tracking-tighter mb-1" id="modal-title">Upload New Work</div>
-      <div class="text-sm text-zinc-400 mb-6" id="modal-subtitle">Image is stored in your browser (localStorage). For production use Supabase Storage.</div>
+      <div class="text-sm text-zinc-400 mb-6" id="modal-subtitle">Images are uploaded to Supabase Storage and appear on the live gallery instantly.</div>
 
       <form id="upload-form" onsubmit="handleUploadSubmit(event)">
         <input type="hidden" id="edit-id">
@@ -222,32 +222,47 @@
   <div id="global-toast" class="toast"></div>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
   <script src="js/common.js"></script>
   <script src="js/gallery-data.js"></script>
   <script>
     // =======================================================
     // ADMIN DASHBOARD for Joe's Window Tinting
     // Directly modeled on the ThankQTattoo admin (structure, UX, patterns)
-    // Uses localStorage via gallery-data.js for zero-config operation.
+    // Uses Supabase for gallery storage + auth.
     // =======================================================
     let currentUser = null;
     let galleryCache = [];
 
-    // Simple demo auth (easy to replace with real Supabase Auth)
-    const DEMO_EMAIL = 'admin@joestint.com';
-    const DEMO_PASSWORD = 'jowt2025';
-
     async function bootAdmin() {
-      // In a real upgrade you would init Supabase here exactly like thankqtattoo
-      // and use onAuthStateChange + getUser()
+      await window.JoWTData.init();
 
-      // For now: check if previously "logged in" this session
-      const savedUser = sessionStorage.getItem('jowt_admin_user');
-      if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        showDashboard();
+      if (window.JoWTSupabase?.isConfigured?.()) {
+        const session = await window.JoWTSupabase.getSession();
+        if (session?.user) {
+          currentUser = { email: session.user.email, id: session.user.id };
+          showDashboard();
+        } else {
+          showLogin();
+        }
+
+        window.JoWTSupabase.onAuthStateChange((_event, session) => {
+          if (session?.user) {
+            currentUser = { email: session.user.email, id: session.user.id };
+          } else if (document.getElementById('dashboard') && !document.getElementById('dashboard').classList.contains('hidden')) {
+            showLogin();
+          }
+        });
       } else {
-        showLogin();
+        const savedUser = sessionStorage.getItem('jowt_admin_user');
+        if (savedUser) {
+          currentUser = JSON.parse(savedUser);
+          showDashboard();
+        } else {
+          showLogin();
+        }
       }
 
       document.getElementById('login-form').addEventListener('submit', handleLogin);
@@ -275,22 +290,32 @@
       initDashboard();
     }
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-password').value;
 
-      // Demo auth — replace this block with real Supabase sign-in
-      if (email === DEMO_EMAIL && pass === DEMO_PASSWORD) {
-        currentUser = { email };
-        sessionStorage.setItem('jowt_admin_user', JSON.stringify(currentUser));
-        showDashboard();
-      } else {
-        alert('Demo login failed.\n\nUse:\nEmail: admin@joestint.com\nPassword: jowt2025');
+      try {
+        if (window.JoWTSupabase?.isConfigured?.()) {
+          const { user } = await window.JoWTSupabase.signIn(email, pass);
+          currentUser = { email: user.email, id: user.id };
+          showDashboard();
+        } else if (email === 'admin@joestint.com' && pass === 'jowt2025') {
+          currentUser = { email };
+          sessionStorage.setItem('jowt_admin_user', JSON.stringify(currentUser));
+          showDashboard();
+        } else {
+          alert('Login failed. Check your email and password.');
+        }
+      } catch (err) {
+        alert('Login failed: ' + (err.message || err));
       }
     }
 
-    function logoutAdmin() {
+    async function logoutAdmin() {
+      if (window.JoWTSupabase?.isConfigured?.()) {
+        await window.JoWTSupabase.signOut();
+      }
       sessionStorage.removeItem('jowt_admin_user');
       currentUser = null;
       window.location.reload();
@@ -322,11 +347,11 @@
       if (userEl) userEl.textContent = currentUser?.email || '—';
     }
 
-    function refreshAll() {
-      refreshGalleryList().then(() => {
-        updateStats();
-        window.JoWT.showToast('Refreshed');
-      });
+    async function refreshAll() {
+      await window.JoWTData.refreshGallery();
+      await refreshGalleryList();
+      updateStats();
+      window.JoWT.showToast('Synced from cloud');
     }
 
     // ==================== GALLERY ====================
@@ -334,6 +359,9 @@
       const container = document.getElementById('admin-gallery-list');
       container.innerHTML = `<div class="text-xs text-zinc-500 p-3">Loading gallery...</div>`;
 
+      if (window.JoWTData.isUsingSupabase()) {
+        await window.JoWTData.refreshGallery();
+      }
       galleryCache = window.JoWTData.getGalleryItems();
 
       container.innerHTML = '';
@@ -423,7 +451,7 @@
       } else {
         editingId = null;
         titleEl.textContent = 'Upload New Work';
-        subEl.textContent = 'Photo is converted to a data URL and saved locally. It will appear instantly on gallery.html.';
+        subEl.textContent = 'Photo uploads to Supabase Storage and appears instantly on the public gallery.';
         document.getElementById('file-section').classList.remove('hidden');
         fileInput.required = true;
         submitBtn.textContent = 'UPLOAD & PUBLISH';
@@ -473,27 +501,14 @@
 
           const file = fileInput.files[0];
           progressWrap.classList.remove('hidden');
-          progressBar.style.width = '10%';
-          percentEl.textContent = '10%';
+          progressBar.style.width = '15%';
+          percentEl.textContent = '15%';
 
-          // Convert to data URL (simulates upload)
-          const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(file);
-          });
+          progressBar.style.width = '55%';
+          percentEl.textContent = '55%';
 
-          // Fake progress
-          progressBar.style.width = '70%';
-          percentEl.textContent = '70%';
-          await new Promise(r => setTimeout(r, 180));
-
-          const newItem = {
-            title, desc, category, darkness, vehicleType,
-            img: dataUrl
-          };
-          window.JoWTData.addGalleryItem(newItem);
+          const newItem = { title, desc, category, darkness, vehicleType };
+          await window.JoWTData.addGalleryItem(newItem, file);
 
           progressBar.style.width = '100%';
           percentEl.textContent = '100%';
@@ -521,12 +536,12 @@
       showUploadModal(item);
     }
 
-    function deleteGalleryItem(id) {
+    async function deleteGalleryItem(id) {
       if (!confirm('Delete this gallery piece? This cannot be undone.')) return;
       try {
-        window.JoWTData.deleteGalleryItem(id);
+        await window.JoWTData.deleteGalleryItem(id);
         window.JoWT.showToast('Deleted.');
-        refreshGalleryList();
+        await refreshGalleryList();
         updateStats();
       } catch (e) {
         alert('Delete failed: ' + e.message);

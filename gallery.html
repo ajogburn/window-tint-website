@@ -9,6 +9,9 @@
   
   <!-- Tailwind via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
   <script src="js/common.js"></script>
   <script src="js/gallery-data.js"></script>
   
@@ -534,33 +537,25 @@
       }
     }
 
-    function initGallery() {
+    async function initGallery() {
       initYear();
-      
-      // Load dynamic data managed by admin.html
+
+      await window.JoWTData.init();
       loadGalleryData();
-      
-      // Initial category buttons
       initCategoryFilters();
 
-      // Initial filters from the live data
       currentFiltered = [...GALLERY_ITEMS];
-      
-      // Render first grid
       renderGalleryGrid();
 
-      // Default sort select value
       document.getElementById('sort-select').value = sortBy;
-      
-      // Allow enter in search to do nothing special (already live)
 
-      // Initial active pill style
       setTimeout(() => {
         const firstBtn = document.querySelector('#category-filters button');
         if (firstBtn) firstBtn.classList.add('active', 'border-yellow-400');
       }, 10);
 
-      console.log('%c[Gallery] Now powered by shared admin data layer (localStorage).', 'color:#888');
+      const source = window.JoWTData.isUsingSupabase() ? 'Supabase' : 'local cache';
+      console.log(`%c[Gallery] Loaded from ${source}.`, 'color:#888');
     }
 
     window.onload = initGallery;

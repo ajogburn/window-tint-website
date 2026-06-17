@@ -1,0 +1,27 @@
+{
+  "name": "window-tint-website",
+  "version": "1.0.0",
+  "description": "A clean, **pure static website** (no React, no build tools, no Node required) for Joe's Window Tinting.",
+  "main": "index.js",
+  "scripts": {
+    "setup:supabase": "node scripts/setup-supabase.mjs",
+    "db:schema": "node scripts/run-schema.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajogburn/window-tint-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ajogburn/window-tint-website/issues"
+  },
+  "homepage": "https://github.com/ajogburn/window-tint-website#readme",
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.108.2",
+    "pg": "^8.21.0"
+  }
+}
