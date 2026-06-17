@@ -128,14 +128,10 @@
     </div>
 
     <!-- STATS -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8">
       <div class="stat">
         <div class="text-xs text-zinc-400">GALLERY PIECES</div>
         <div id="stat-gallery" class="text-4xl font-semibold tabular-nums mt-1">—</div>
-      </div>
-      <div class="stat">
-        <div class="text-xs text-zinc-400">LEADS / INQUIRIES</div>
-        <div id="stat-submissions" class="text-4xl font-semibold tabular-nums mt-1">—</div>
       </div>
       <div class="stat">
         <div class="text-xs text-zinc-400">LOGGED IN AS</div>
@@ -146,16 +142,14 @@
         <div class="mt-1.5 text-sm flex flex-wrap gap-x-3">
           <a href="gallery.html" target="_blank" class="underline hover:text-yellow-400">Live Gallery</a>
           <a href="index.html" target="_blank" class="underline hover:text-yellow-400">Homepage</a>
-          <a href="#" onclick="window.JoWTData && window.JoWTData.resetToDefaults(); return false;" class="underline hover:text-red-400 text-xs">Reset Data</a>
+          <a href="#" onclick="if (confirm('Reset gallery to original seed data?')) { localStorage.removeItem('jowt_gallery_items'); location.reload(); }" class="underline hover:text-red-400 text-xs">Reset Gallery</a>
         </div>
       </div>
     </div>
 
     <!-- TABS -->
-    <div class="flex border-b border-zinc-800 mb-1 text-sm overflow-x-auto">
+    <div class="flex border-b border-zinc-800 mb-1 text-sm">
       <button onclick="switchTab('gallery')" id="tab-gallery" class="admin-tab active whitespace-nowrap">Gallery</button>
-      <button onclick="switchTab('categories')" id="tab-categories" class="admin-tab whitespace-nowrap">Categories</button>
-      <button onclick="switchTab('submissions')" id="tab-submissions" class="admin-tab whitespace-nowrap">Submissions</button>
     </div>
 
     <!-- ========== GALLERY TAB ========== -->
@@ -163,58 +157,12 @@
       <div class="flex items-center justify-between py-5">
         <div>
           <div class="font-semibold">Gallery Work</div>
-          <div class="text-xs text-zinc-500">Images + details shown on the public gallery page</div>
+          <div class="text-xs text-zinc-500">Add, edit, or delete pieces shown on the public gallery.</div>
         </div>
         <button onclick="showUploadModal()" class="btn btn-primary">+ UPLOAD NEW PIECE</button>
       </div>
 
       <div id="admin-gallery-list" class="space-y-2"></div>
-    </div>
-
-    <!-- ========== CATEGORIES TAB ========== -->
-    <div id="panel-categories" class="tab-panel hidden">
-      <div class="py-5">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-y-2 mb-5">
-          <div>
-            <div class="font-semibold text-xl tracking-tight">Categories &amp; Filters</div>
-            <div class="text-xs text-zinc-500 mt-0.5 max-w-prose">Manage the filters that appear on the public gallery. New categories show up immediately in the upload form and public filters.</div>
-          </div>
-          <button onclick="refreshCategoriesList()" class="btn btn-ghost btn-sm self-start md:self-auto">↻ REFRESH</button>
-        </div>
-
-        <!-- Add new category -->
-        <div class="bg-[#161618] border border-zinc-800 rounded-2xl p-5 mb-6">
-          <div class="text-xs uppercase tracking-[1.5px] text-zinc-400 mb-2">CREATE NEW CATEGORY</div>
-          <div class="flex flex-col sm:flex-row gap-3">
-            <input id="new-cat-name" type="text" class="form-input flex-1" placeholder="e.g. Marine, Classic Cars, Fleet Vehicles..." />
-            <button onclick="addNewCategory()" class="btn btn-primary whitespace-nowrap px-8">+ ADD CATEGORY</button>
-          </div>
-          <div class="text-[11px] text-zinc-500 mt-3">Categories power the filter pills on gallery.html.</div>
-        </div>
-
-        <div class="mb-2 flex items-center justify-between">
-          <div class="text-xs uppercase tracking-[1.5px] text-zinc-400">CURRENT CATEGORIES</div>
-          <div id="cats-count" class="text-xs text-zinc-500"></div>
-        </div>
-        <div id="categories-list" class="space-y-2"></div>
-
-        <div class="text-[11px] mt-4 text-zinc-500 border border-zinc-800 bg-[#111113] rounded-2xl p-3">
-          Tip: Deleting a category only removes it from the filter list. Existing gallery pieces keep their category value and will still show correctly.
-        </div>
-      </div>
-    </div>
-
-    <!-- ========== SUBMISSIONS TAB ========== -->
-    <div id="panel-submissions" class="tab-panel hidden">
-      <div class="flex items-center justify-between py-5">
-        <div class="font-semibold">Leads &amp; Inquiries</div>
-        <div class="flex gap-2">
-          <button onclick="exportSubmissionsCSV()" class="btn btn-ghost btn-sm">Export CSV</button>
-          <button onclick="clearSubmissions()" class="btn btn-ghost btn-sm text-red-400">Clear All</button>
-        </div>
-      </div>
-      <div id="admin-submissions-list" class="space-y-3"></div>
-      <div class="text-[11px] text-zinc-500 mt-6">Quote requests and contact form submissions are saved here (local only for now).</div>
     </div>
   </div>
 
@@ -359,30 +307,26 @@
     }
 
     function switchTab(tab) {
+      // Simplified admin - only Gallery tab
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
-      const panel = document.getElementById('panel-' + tab);
+      const panel = document.getElementById('panel-gallery');
       if (panel) panel.classList.remove('hidden');
 
       document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-      const btn = document.getElementById('tab-' + tab);
+      const btn = document.getElementById('tab-gallery');
       if (btn) btn.classList.add('active');
-
-      if (tab === 'categories') refreshCategoriesList();
-      if (tab === 'submissions') renderSubmissionsList();
     }
 
     async function initDashboard() {
       await refreshGalleryList();
       updateStats();
-      switchTab('gallery');
+      // Only gallery tab now
+      document.getElementById('panel-gallery').classList.remove('hidden');
     }
 
     function updateStats() {
       const gallery = window.JoWTData.getGalleryItems();
       document.getElementById('stat-gallery').textContent = gallery.length || '—';
-
-      const subs = window.JoWTData.getSubmissions();
-      document.getElementById('stat-submissions').textContent = subs.length;
 
       const userEl = document.getElementById('stat-user');
       if (userEl) userEl.textContent = currentUser?.email || '—';
@@ -391,12 +335,6 @@
     function refreshAll() {
       refreshGalleryList().then(() => {
         updateStats();
-        if (!document.getElementById('panel-categories').classList.contains('hidden')) {
-          refreshCategoriesList();
-        }
-        if (!document.getElementById('panel-submissions').classList.contains('hidden')) {
-          renderSubmissionsList();
-        }
         window.JoWT.showToast('Refreshed');
       });
     }
@@ -465,22 +403,15 @@
       document.getElementById('edit-id').value = '';
       editingId = null;
 
-      // Populate category dropdown from live categories
+      // Fixed categories matching the public site filters
       const catSelect = document.getElementById('upload-category');
-      catSelect.innerHTML = '';
-      const cats = window.JoWTData.getCategories();
-      cats.forEach(c => {
-        // skip the "All Work" meta entry if present
-        if (c.name.toLowerCase() === 'all work') return;
-        const opt = document.createElement('option');
-        opt.value = c.name.toLowerCase().includes('auto') ? 'automotive' :
-                    c.name.toLowerCase().includes('truck') ? 'truck' :
-                    c.name.toLowerCase().includes('ag') ? 'ag' :
-                    c.name.toLowerCase().includes('comm') ? 'commercial' :
-                    c.name.toLowerCase().includes('res') ? 'residential' : c.name.toLowerCase();
-        opt.textContent = c.name;
-        catSelect.appendChild(opt);
-      });
+      catSelect.innerHTML = `
+        <option value="automotive">Automotive</option>
+        <option value="truck">Trucks & SUVs</option>
+        <option value="ag">Ag & Equipment</option>
+        <option value="commercial">Commercial</option>
+        <option value="residential">Residential</option>
+      `;
 
       if (existing) {
         editingId = existing.id;
@@ -492,11 +423,9 @@
         document.getElementById('upload-darkness').value = existing.darkness || '20%';
         document.getElementById('upload-vehicle').value = existing.vehicleType || 'car';
 
-        // Try to select correct category
+        // Set category
         const catVal = existing.category || 'automotive';
-        if (Array.from(catSelect.options).some(o => o.value === catVal)) {
-          catSelect.value = catVal;
-        }
+        catSelect.value = catVal;
 
         document.getElementById('file-section').classList.add('hidden');
         fileInput.required = false;
@@ -614,191 +543,8 @@
       }
     }
 
-    // ==================== CATEGORIES ====================
-    function refreshCategoriesList() {
-      const container = document.getElementById('categories-list');
-      const countEl = document.getElementById('cats-count');
-      if (!container) return;
-
-      container.innerHTML = `<div class="text-xs text-zinc-500 px-1 py-3">Loading categories...</div>`;
-
-      const cats = window.JoWTData.getCategories().filter(c => c.name.toLowerCase() !== 'all work');
-      countEl.textContent = `${cats.length} categories`;
-
-      container.innerHTML = '';
-
-      if (!cats.length) {
-        container.innerHTML = `<div class="text-center py-8 border border-dashed border-zinc-800 rounded-2xl text-sm text-zinc-400">No custom categories yet.</div>`;
-        return;
-      }
-
-      cats.forEach(cat => {
-        const row = document.createElement('div');
-        row.className = 'admin-row flex items-center gap-4 bg-[#161618] border border-zinc-800 rounded-2xl px-4 py-3';
-
-        row.innerHTML = `
-          <div class="flex-1 min-w-0">
-            <div class="font-medium text-lg tracking-tight">${window.JoWT.escapeHtml(cat.name)}</div>
-            <div class="text-[10px] text-zinc-500">Used for public filters &amp; upload dropdown</div>
-          </div>
-          <div class="flex gap-2 flex-shrink-0">
-            <button class="btn btn-ghost btn-sm text-xs" data-action="edit">EDIT</button>
-            <button class="btn btn-ghost btn-sm text-xs text-red-400" data-action="delete">DELETE</button>
-          </div>
-        `;
-
-        row.querySelector('[data-action="edit"]').onclick = () => editCategory(cat);
-        row.querySelector('[data-action="delete"]').onclick = () => deleteCategory(cat);
-
-        container.appendChild(row);
-      });
-    }
-
-    function addNewCategory() {
-      const input = document.getElementById('new-cat-name');
-      const name = (input.value || '').trim();
-      if (!name) { alert('Enter a category name'); return; }
-
-      try {
-        window.JoWTData.addCategory(name);
-        input.value = '';
-        window.JoWT.showToast('Category added. It will appear in filters and the upload form.');
-        refreshCategoriesList();
-
-        // live update open upload modal if present
-        const modal = document.getElementById('upload-modal');
-        if (modal && modal.classList.contains('flex')) {
-          // re-populate category select
-          const sel = document.getElementById('upload-category');
-          if (sel) {
-            const current = sel.value;
-            sel.innerHTML = '';
-            window.JoWTData.getCategories().forEach(c => {
-              if (c.name.toLowerCase() === 'all work') return;
-              const o = document.createElement('option');
-              o.value = c.name.toLowerCase().includes('auto') ? 'automotive' : c.name.toLowerCase();
-              o.textContent = c.name;
-              sel.appendChild(o);
-            });
-            if (current) sel.value = current;
-          }
-        }
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    function editCategory(cat) {
-      const newName = prompt('Rename category:', cat.name);
-      if (!newName || newName.trim() === cat.name) return;
-
-      try {
-        window.JoWTData.updateCategory(cat.id, newName.trim());
-        window.JoWT.showToast('Category renamed.');
-        refreshCategoriesList();
-        refreshGalleryList(); // in case labels change
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    function deleteCategory(cat) {
-      if (!confirm(`Delete category "${cat.name}"?\n\nExisting gallery pieces using this category will keep working (the value is stored on each piece).`)) return;
-
-      try {
-        window.JoWTData.deleteCategory(cat.id);
-        window.JoWT.showToast('Category removed.');
-        refreshCategoriesList();
-        refreshGalleryList();
-      } catch (e) {
-        alert(e.message);
-      }
-    }
-
-    // ==================== SUBMISSIONS ====================
-    function renderSubmissionsList() {
-      const container = document.getElementById('admin-submissions-list');
-      const subs = window.JoWTData.getSubmissions();
-
-      container.innerHTML = '';
-
-      if (!subs.length) {
-        container.innerHTML = `<div class="p-5 border border-dashed border-zinc-800 rounded-2xl text-sm text-zinc-400">No leads yet. They appear here when people submit the contact or quote form on the site.</div>`;
-        return;
-      }
-
-      subs.forEach((s) => {
-        const div = document.createElement('div');
-        div.className = 'bg-[#161618] border border-zinc-800 rounded-2xl p-4 text-sm';
-        const date = new Date(s.ts).toLocaleString();
-
-        let quoteInfo = '';
-        if (s.quote) {
-          quoteInfo = `<div class="text-[11px] mt-1 text-yellow-400/80">${s.quote}</div>`;
-        }
-
-        div.innerHTML = `
-          <div class="flex justify-between text-xs">
-            <div class="text-zinc-400">${date}</div>
-            <div class="font-mono text-[10px] text-zinc-500">${s.id}</div>
-          </div>
-          <div class="mt-1 font-medium">${window.JoWT.escapeHtml(s.name || '')} <span class="font-normal text-zinc-400">• ${window.JoWT.escapeHtml(s.phone || s.email || '')}</span></div>
-          <div class="text-xs mt-0.5 text-yellow-400/80">${window.JoWT.escapeHtml(s.service || 'General')}</div>
-          ${quoteInfo}
-          <div class="text-sm mt-2 text-zinc-300">${window.JoWT.escapeHtml((s.message || '').substring(0, 180))}${(s.message || '').length > 180 ? '…' : ''}</div>
-
-          <div class="flex gap-2 mt-3">
-            ${s.contacted ? '<span class="px-3 py-1 text-xs rounded-full border border-green-800/60 text-green-400">CONTACTED</span>' : ''}
-            <button class="px-3 py-1 text-xs rounded-full border border-green-800/60 text-green-400 hover:bg-green-950" onclick="markContacted('${s.id}')">MARK CONTACTED</button>
-            <button class="px-3 py-1 text-xs rounded-full border border-red-900/50 text-red-400 hover:bg-red-950" onclick="deleteSubmission('${s.id}')">DELETE</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function markContacted(id) {
-      window.JoWTData.markSubmissionContacted(id);
-      renderSubmissionsList();
-      updateStats();
-    }
-
-    function deleteSubmission(id) {
-      if (!confirm('Delete this lead?')) return;
-      window.JoWTData.deleteSubmission(id);
-      renderSubmissionsList();
-      updateStats();
-    }
-
-    function exportSubmissionsCSV() {
-      const subs = window.JoWTData.getSubmissions();
-      if (!subs.length) { alert('No submissions to export'); return; }
-
-      const headers = ['id','ts','name','phone','email','service','message','quote'];
-      let csv = headers.join(',') + '\n';
-      subs.forEach(s => {
-        const row = headers.map(h => {
-          let v = (s[h] || '').toString().replace(/"/g, '""');
-          return `"${v}"`;
-        });
-        csv += row.join(',') + '\n';
-      });
-
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `jowt_leads_${new Date().toISOString().slice(0,10)}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function clearSubmissions() {
-      if (!confirm('Clear all leads?')) return;
-      window.JoWTData.clearSubmissions();
-      renderSubmissionsList();
-      updateStats();
-    }
+    // No categories or submissions management in this simplified admin.
+    // Admin focuses only on Gallery items (add / edit / delete).
 
     // Boot
     window.onload = bootAdmin;
