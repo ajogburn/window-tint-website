@@ -10,10 +10,8 @@
   <!-- Tailwind CSS via CDN - zero build step, easy to understand and customize -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=3"></script>
-  <script src="js/supabase-client.js?v=3"></script>
-  <script src="js/common.js?v=3"></script>
-  <script src="js/gallery-data.js?v=3"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/common.js"></script>
   
   <style>
     /* Custom styles to match the original premium light design exactly */
@@ -829,12 +827,12 @@
       return labels[category] || category;
     }
 
-    function initHomeGalleryPreview() {
+    async function initHomeGalleryPreview() {
       const grid = document.getElementById('home-gallery-grid');
       if (!grid) return;
 
-      const items = window.JoWTData && window.JoWTData.getGalleryItems
-        ? window.JoWTData.getGalleryItems().slice(0, 6)
+      const items = window.JoWTSupabase
+        ? (await window.JoWTSupabase.getGalleryItems()).slice(0, 6)
         : [];
 
       if (!items.length) {
@@ -867,8 +865,7 @@
     async function initAll() {
       initTailwind();
       initYear();
-      await window.JoWTData.init();
-      initHomeGalleryPreview();
+      await initHomeGalleryPreview();
 
       // FAQ (static)
       initFAQ();

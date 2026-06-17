@@ -223,46 +223,39 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-config.js?v=3"></script>
-  <script src="js/supabase-client.js?v=3"></script>
-  <script src="js/common.js?v=3"></script>
-  <script src="js/gallery-data.js?v=3"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/common.js"></script>
   <script>
     // =======================================================
-    // ADMIN DASHBOARD for Joe's Window Tinting
-    // Directly modeled on the ThankQTattoo admin (structure, UX, patterns)
-    // Uses Supabase for gallery storage + auth.
+    // ADMIN DASHBOARD — Supabase edition (same pattern as ThankQTattoo)
     // =======================================================
     let currentUser = null;
     let galleryCache = [];
 
     async function bootAdmin() {
-      await window.JoWTData.init();
+      const client = window.JoWTSupabase ? window.JoWTSupabase.getSupabase() : null;
 
-      if (window.JoWTSupabase?.isConfigured?.()) {
-        const session = await window.JoWTSupabase.getSession();
-        if (session?.user) {
-          currentUser = { email: session.user.email, id: session.user.id };
+      if (!client) {
+        alert('Supabase client failed to initialize. Check that js/supabase-client.js loaded correctly.');
+        return;
+      }
+
+      client.auth.onAuthStateChange((event, session) => {
+        if (session && session.user) {
+          currentUser = session.user;
           showDashboard();
         } else {
+          currentUser = null;
           showLogin();
         }
+      });
 
-        window.JoWTSupabase.onAuthStateChange((_event, session) => {
-          if (session?.user) {
-            currentUser = { email: session.user.email, id: session.user.id };
-          } else if (document.getElementById('dashboard') && !document.getElementById('dashboard').classList.contains('hidden')) {
-            showLogin();
-          }
-        });
+      const { data: { user } } = await client.auth.getUser();
+      if (user) {
+        currentUser = user;
+        showDashboard();
       } else {
-        const savedUser = sessionStorage.getItem('jowt_admin_user');
-        if (savedUser) {
-          currentUser = JSON.parse(savedUser);
-          showDashboard();
-        } else {
-          showLogin();
-        }
+        showLogin();
       }
 
       document.getElementById('login-form').addEventListener('submit', handleLogin);
@@ -296,27 +289,14 @@
       const pass = document.getElementById('login-password').value;
 
       try {
-        if (window.JoWTSupabase?.isConfigured?.()) {
-          const { user } = await window.JoWTSupabase.signIn(email, pass);
-          currentUser = { email: user.email, id: user.id };
-          showDashboard();
-        } else if (email === 'admin@joestint.com' && pass === 'jowt2025') {
-          currentUser = { email };
-          sessionStorage.setItem('jowt_admin_user', JSON.stringify(currentUser));
-          showDashboard();
-        } else {
-          alert('Login failed. Check your email and password.');
-        }
+        await window.JoWTSupabase.signInAdmin(email, pass);
       } catch (err) {
         alert('Login failed: ' + (err.message || err));
       }
     }
 
     async function logoutAdmin() {
-      if (window.JoWTSupabase?.isConfigured?.()) {
-        await window.JoWTSupabase.signOut();
-      }
-      sessionStorage.removeItem('jowt_admin_user');
+      await window.JoWTSupabase.signOutAdmin();
       currentUser = null;
       window.location.reload();
     }
@@ -340,36 +320,35 @@
     }
 
     function updateStats() {
-      const gallery = window.JoWTData.getGalleryItems();
-      document.getElementById('stat-gallery').textContent = gallery.length || '—';
+      document.getElementById('stat-gallery').textContent = galleryCache.length || '—';
 
       const userEl = document.getElementById('stat-user');
       if (userEl) userEl.textContent = currentUser?.email || '—';
     }
 
     async function refreshAll() {
-      await window.JoWTData.refreshGallery();
       await refreshGalleryList();
-      updateStats();
-      window.JoWT.showToast('Synced from cloud');
+      window.JoWT.showToast('Refreshed from Supabase');
     }
 
     // ==================== GALLERY ====================
     async function refreshGalleryList() {
       const container = document.getElementById('admin-gallery-list');
-      container.innerHTML = `<div class="text-xs text-zinc-500 p-3">Loading gallery...</div>`;
+      container.innerHTML = `<div class="text-xs text-zinc-500 p-3">Loading gallery from Supabase...</div>`;
 
-      if (window.JoWTData.isUsingSupabase()) {
-        await window.JoWTData.refreshGallery();
+      try {
+        galleryCache = await window.JoWTSupabase.getGalleryItems();
+      } catch (err) {
+        container.innerHTML = `<div class="text-red-400 p-4">Failed to load gallery: ${err.message}</div>`;
+        return;
       }
-      galleryCache = window.JoWTData.getGalleryItems();
 
       container.innerHTML = '';
 
       if (!galleryCache.length) {
         container.innerHTML = `
           <div class="text-center py-10 border border-dashed border-zinc-800 rounded-2xl">
-            <div class="text-sm">No gallery pieces yet.</div>
+            <div class="text-sm">No pieces yet in Supabase.</div>
             <button onclick="showUploadModal()" class="mt-3 btn btn-primary btn-sm">Upload your first piece</button>
           </div>`;
         updateStats();
@@ -488,11 +467,9 @@
 
       try {
         if (id) {
-          // Edit metadata only
-          await window.JoWTData.updateGalleryItem(id, { title, desc, category, darkness, vehicleType });
-          window.JoWT.showToast('Piece updated.');
+          await window.JoWTSupabase.updateGalleryItem(id, { title, desc, category, darkness, vehicleType });
+          window.JoWT.showToast('Piece updated in Supabase.');
         } else {
-          // New with image
           if (!fileInput.files || !fileInput.files[0]) {
             alert('Please select an image file.');
             submitBtn.disabled = false;
@@ -501,19 +478,19 @@
 
           const file = fileInput.files[0];
           progressWrap.classList.remove('hidden');
-          progressBar.style.width = '15%';
-          percentEl.textContent = '15%';
 
-          progressBar.style.width = '55%';
-          percentEl.textContent = '55%';
+          const onProgress = (pct) => {
+            progressBar.style.width = pct + '%';
+            percentEl.textContent = pct + '%';
+          };
 
-          const newItem = { title, desc, category, darkness, vehicleType };
-          await window.JoWTData.addGalleryItem(newItem, file);
+          await window.JoWTSupabase.uploadGalleryImage(
+            file,
+            { title, desc, category, darkness, vehicleType },
+            onProgress
+          );
 
-          progressBar.style.width = '100%';
-          percentEl.textContent = '100%';
           await new Promise(r => setTimeout(r, 120));
-
           window.JoWT.showToast('Uploaded! Visible on the public gallery now.');
         }
 
@@ -537,10 +514,10 @@
     }
 
     async function deleteGalleryItem(id) {
-      if (!confirm('Delete this gallery piece? This cannot be undone.')) return;
+      if (!confirm('Permanently delete this gallery piece from Supabase?\nThis cannot be undone.')) return;
       try {
-        await window.JoWTData.deleteGalleryItem(id);
-        window.JoWT.showToast('Deleted.');
+        await window.JoWTSupabase.deleteGalleryItem(id);
+        window.JoWT.showToast('Deleted from Supabase.');
         await refreshGalleryList();
         updateStats();
       } catch (e) {
