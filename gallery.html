@@ -304,15 +304,7 @@
     let GALLERY_ITEMS = [];
 
     function loadGalleryData() {
-      if (window.JoWTData && window.JoWTData.getGalleryItems) {
-        GALLERY_ITEMS = window.JoWTData.getGalleryItems();
-      } else {
-        // Fallback seed (should rarely happen)
-        GALLERY_ITEMS = [
-          { id: 'g1', category: 'automotive', vehicleType: 'car', title: '2023 Tesla Model Y — 20% Ceramic', desc: 'Full vehicle premium ceramic. Massive heat rejection.', darkness: '20%', img: 'https://picsum.photos/id/1015/1400/900' },
-          { id: 'g2', category: 'automotive', vehicleType: 'truck', title: 'Ford F-150 Lariat — 5% Rear', desc: 'Aggressive privacy on rear + 35% fronts for legal compliance.', darkness: '5%', img: 'https://picsum.photos/id/160/1400/900' }
-        ];
-      }
+      GALLERY_ITEMS = window.JoWTData?.getGalleryItems?.() || [];
     }
 
     // State
@@ -442,7 +434,10 @@
       countEl.textContent = currentFiltered.length;
 
       if (currentFiltered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-400">No projects match your filters. Try clearing the search.</div>`;
+        const emptyMessage = GALLERY_ITEMS.length === 0
+          ? 'Gallery photos coming soon. Check back after we upload our latest work.'
+          : 'No projects match your filters. Try clearing the search.';
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-400">${emptyMessage}</div>`;
         return;
       }
 

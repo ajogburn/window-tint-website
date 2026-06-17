@@ -8,30 +8,7 @@
   const STORAGE_KEY_CATEGORIES = 'jowt_gallery_categories';
   const STORAGE_KEY_SUBMISSIONS = 'jowt_submissions';
 
-  const SEED_GALLERY = [
-    { id: 'g1', category: 'automotive', vehicleType: 'car', title: '2023 Tesla Model Y — 20% Ceramic', desc: 'Full vehicle premium ceramic. Massive heat rejection.', darkness: '20%', img: 'https://picsum.photos/id/1015/1400/900' },
-    { id: 'g2', category: 'automotive', vehicleType: 'truck', title: 'Ford F-150 Lariat — 5% Rear', desc: 'Aggressive privacy on rear + 35% fronts for legal compliance.', darkness: '5%', img: 'https://picsum.photos/id/160/1400/900' },
-    { id: 'g3', category: 'automotive', vehicleType: 'car', title: 'BMW 3-Series — Full Ceramic 20%', desc: 'Factory look with serious performance film.', darkness: '20%', img: 'https://picsum.photos/id/201/1400/900' },
-    { id: 'g4', category: 'residential', vehicleType: 'other', title: 'Modern Home — Clarksville', desc: '35% ceramic on all large south & west windows.', darkness: '35%', img: 'https://picsum.photos/id/251/1400/900' },
-    { id: 'g5', category: 'commercial', vehicleType: 'other', title: 'Medical Office Building', desc: 'Security film + energy performance on 38 windows.', darkness: '35%', img: 'https://picsum.photos/id/29/1400/900' },
-    { id: 'g6', category: 'automotive', vehicleType: 'suv', title: 'Jeep Wrangler — Matte Carbon 15%', desc: 'Matte finish carbon for that tactical off-road look.', darkness: '15%', img: 'https://picsum.photos/id/180/1400/900' },
-    { id: 'g7', category: 'automotive', vehicleType: 'car', title: 'Chevrolet Corvette C8 — Ceramic Tint', desc: 'Premium ceramic install at our Clarksville shop.', darkness: '20%', img: 'img/Screenshot 2026-06-17 103751_edited.png' },
-    { id: 'g8', category: 'residential', vehicleType: 'other', title: 'Lakefront Home — Full Exterior', desc: 'Dramatically reduced cooling costs.', darkness: '30%', img: 'https://picsum.photos/id/1033/1400/900' },
-    { id: 'g9', category: 'commercial', vehicleType: 'other', title: 'Retail Storefront Tint', desc: 'High performance reflective + security film.', darkness: '30%', img: 'https://picsum.photos/id/106/1400/900' },
-    { id: 'g10', category: 'automotive', vehicleType: 'truck', title: 'Ram 1500 Work Truck — Full Body PPF', desc: 'Rock chip protection for a working truck.', darkness: '35%', img: 'https://picsum.photos/id/312/1400/900' },
-    { id: 'g11', category: 'automotive', vehicleType: 'suv', title: 'Chevy Tahoe — 35% Ceramic', desc: 'Family hauler with great visibility and heat control.', darkness: '35%', img: 'https://picsum.photos/id/251/1400/900' },
-    { id: 'g12', category: 'automotive', vehicleType: 'truck', title: 'Classic 1969 Camaro — 15% Carbon', desc: 'Beautifully restored muscle car with period-correct darkness.', darkness: '15%', img: 'https://picsum.photos/id/160/1400/900' },
-    { id: 'g13', category: 'ag', vehicleType: 'other', title: 'John Deere Tractor Cab', desc: 'Agriculture equipment — keeps the cab cool during long days.', darkness: '20%', img: 'https://picsum.photos/id/29/1400/900' },
-    { id: 'g14', category: 'automotive', vehicleType: 'car', title: 'Mercedes C-Class — 20% Ceramic', desc: 'Sleek and professional look for a daily driver.', darkness: '20%', img: 'https://picsum.photos/id/201/1400/900' },
-    { id: 'g15', category: 'commercial', vehicleType: 'other', title: 'Warehouse Office Windows', desc: 'Commercial project with security & glare control.', darkness: '25%', img: 'https://picsum.photos/id/106/1400/900' },
-    { id: 'g16', category: 'automotive', vehicleType: 'suv', title: 'Toyota 4Runner — 5% Rear Limo', desc: 'Full privacy for the rear passengers and cargo.', darkness: '5%', img: 'https://picsum.photos/id/180/1400/900' },
-    { id: 'g17', category: 'ag', vehicleType: 'other', title: 'Farm Equipment — Enclosed Cab', desc: 'Multiple pieces of ag equipment done for a local farm.', darkness: '15%', img: 'https://picsum.photos/id/312/1400/900' },
-    { id: 'g18', category: 'automotive', vehicleType: 'truck', title: 'Ford Super Duty — Heavy Tint', desc: '20% all around on a workhorse truck.', darkness: '20%', img: 'https://picsum.photos/id/160/1400/900' },
-    { id: 'g19', category: 'automotive', vehicleType: 'car', title: 'Honda Civic Type R — 20% Ceramic', desc: 'Sporty daily with excellent heat rejection.', darkness: '20%', img: 'https://picsum.photos/id/1015/1400/900' },
-    { id: 'g20', category: 'residential', vehicleType: 'other', title: 'Historic Home Restoration', desc: 'Careful install preserving original windows.', darkness: '35%', img: 'https://picsum.photos/id/251/1400/900' },
-    { id: 'g21', category: 'automotive', vehicleType: 'suv', title: 'Range Rover — Full Ceramic + PPF', desc: 'Premium protection package.', darkness: '20%', img: 'https://picsum.photos/id/133/1400/900' },
-    { id: 'g22', category: 'commercial', vehicleType: 'other', title: 'School Admin Building', desc: 'Large commercial job with energy savings focus.', darkness: '30%', img: 'https://picsum.photos/id/29/1400/900' },
-  ];
+  const SEED_GALLERY = [];
 
   const SEED_CATEGORIES = [
     { id: 'cat-all', name: 'All Work' },
@@ -51,9 +28,15 @@
 
   function load(key, seed) {
     const saved = window.JoWT ? window.JoWT.loadFromStorage(key, null) : null;
-    if (saved && Array.isArray(saved) && saved.length > 0) return saved;
-    if (window.JoWT) window.JoWT.saveToStorage(key, seed);
+    if (saved && Array.isArray(saved)) return saved;
+    if (seed.length > 0 && window.JoWT) window.JoWT.saveToStorage(key, seed);
     return [...seed];
+  }
+
+  function clearLocalGalleryCache() {
+    try {
+      localStorage.removeItem(STORAGE_KEY_GALLERY);
+    } catch (_) {}
   }
 
   function save(key, data) {
@@ -79,6 +62,7 @@
             state.gallery = await window.JoWTSupabase.fetchGalleryItems();
             state.useSupabase = true;
             state.initialized = true;
+            clearLocalGalleryCache();
             return state.gallery;
           } catch (err) {
             console.warn('[JoWTData] Supabase load failed, using local fallback:', err.message || err);
