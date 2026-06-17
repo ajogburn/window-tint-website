@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Work • Gallery | Joe's Window Tinting — Clarksville, TN</title>
-  <meta name="description" content="Browse real examples of our window tinting work: cars, trucks, SUVs, homes, commercial buildings, and agriculture equipment since 1981.">
+  <meta name="description" content="Browse real examples of our window tinting work: cars, trucks, SUVs, homes, commercial buildings, and agriculture equipment since 1981. Lifetime warranty on ceramic &amp; carbon automotive film.">
   <link rel="icon" type="image/svg+xml" href="public/favicon.svg">
   
   <!-- Tailwind via CDN -->
@@ -14,27 +14,30 @@
   
   <style>
     body { font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    
+
     .glass {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(24, 24, 27, 0.95);
       backdrop-filter: blur(20px);
-      border: 1px solid #e4e4e7;
+      border: 1px solid #27272a;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     }
 
     .gallery-card {
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s;
+      background-color: #18181b;
+      border-color: #27272a;
     }
     .gallery-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
       border-color: #facc15;
     }
 
     .filter-btn {
       transition: all 0.15s ease;
-      background-color: white;
-      border-color: #e4e4e7;
-      color: #3f3f46;
+      background-color: #18181b;
+      border-color: #27272a;
+      color: #a1a1aa;
     }
     .filter-btn.active {
       background-color: #facc15;
@@ -43,10 +46,10 @@
     }
 
     .input {
-      background-color: white;
-      border: 1px solid #d4d4d8;
+      background-color: #18181b;
+      border: 1px solid #27272a;
       transition: all 0.15s ease;
-      color: #18181b;
+      color: #e4e4e7;
     }
     .input:focus {
       border-color: #facc15;
@@ -63,12 +66,12 @@
     .btn-primary:hover { background-color: #eab308; transform: translateY(-1px); }
 
     .btn-secondary {
-      background-color: white;
-      border: 1px solid #d4d4d8;
-      color: #3f3f46;
+      background-color: #27272a;
+      border: 1px solid #3f3f46;
+      color: #e4e4e7;
       transition: all 0.15s ease;
     }
-    .btn-secondary:hover { background-color: #f4f4f5; border-color: #a1a1aa; color: #18181b; }
+    .btn-secondary:hover { background-color: #3f3f46; border-color: #52525b; color: #f4f4f5; }
 
     .modal {
       animation: modalEnter 0.2s cubic-bezier(0.32, 0.72, 0, 1);
@@ -79,67 +82,84 @@
     }
 
     .nav-link { transition: color 0.15s ease; }
-    .nav-link:hover { color: #18181b; }
+    .nav-link:hover { color: #facc15; }
+
+    .section-title {
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(to right, #facc15, #eab308);
+      border-radius: 3px;
+    }
   </style>
 </head>
-<body class="bg-zinc-50 text-zinc-900 min-h-screen">
+<body class="bg-zinc-950 text-zinc-100 min-h-screen overflow-x-hidden">
   
-  <!-- NAVBAR (Gallery version) -->
-  <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-xl z-50 border-b border-zinc-200">
+  <!-- NAVBAR -->
+  <nav class="fixed top-0 w-full bg-zinc-900/95 backdrop-blur-xl z-50 border-b border-zinc-800">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
       <a href="index.html" class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-yellow-400 rounded-lg flex items-center justify-center">
-          <span class="text-zinc-950 font-black text-xl tracking-tighter">JOE</span>
-        </div>
-        <div>
-          <div class="text-2xl font-bold text-zinc-900 tracking-tight">Joe's Window Tinting</div>
-          <div class="text-[10px] text-zinc-500 -mt-1">EST 1981 • CLARKSVILLE, TN</div>
-        </div>
+        <img src="img/Screenshot 2026-06-17 111000_edited.png" alt="Joe's Window Tinting Logo" class="h-10 w-auto object-contain" />
       </a>
 
-      <!-- Desktop -->
       <div class="hidden md:flex items-center gap-9 text-sm font-medium">
-        <a href="index.html" class="nav-link text-zinc-600">Home</a>
-        <a href="gallery.html" class="nav-link text-yellow-600 font-medium">Gallery</a>
+        <a href="index.html#services" class="nav-link text-zinc-400">Services</a>
+        <a href="index.html#quote-section" class="nav-link text-zinc-400">Quote</a>
+        <a href="index.html#testimonials" class="nav-link text-zinc-400">Reviews</a>
+        <a href="index.html#contact" class="nav-link text-zinc-400">Contact</a>
+        <a href="gallery.html" class="nav-link text-yellow-400 font-medium">Gallery</a>
       </div>
 
       <div class="hidden md:flex items-center gap-4">
-        <a href="tel:9318966453" class="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+        <a href="tel:9318966453" class="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-yellow-400 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" /></svg>
           (931) 896-6453
         </a>
         <a href="index.html#quote-section" class="btn-primary px-6 py-2.5 rounded-full text-sm">Get a Quote</a>
       </div>
 
-      <!-- Mobile -->
       <div class="flex md:hidden items-center gap-3">
-        <a href="tel:9318966453" class="p-2.5 rounded-full bg-zinc-100 text-yellow-500">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2 3 3 0 013 3v1m0 0v1m0-1a9 9 0 01-9 9m9-9a9 9 0 01-9-9m9 9v1m0-1a9 9 0 009-9m-9 9a9 9 0 01-9-9" /></svg>
+        <a href="tel:9318966453" class="p-2.5 rounded-full bg-zinc-800 text-yellow-400">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" /></svg>
         </a>
-        <button onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-zinc-100 text-zinc-700" aria-label="Menu">
+        <button onclick="toggleMobileMenu()" class="p-2.5 rounded-lg bg-zinc-800 text-zinc-300" aria-label="Menu">
           <svg id="m-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
           <svg id="m-close" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6h12v12"/></svg>
         </button>
       </div>
     </div>
 
-    <div id="mobile-menu" class="hidden md:hidden border-t border-zinc-200 bg-white px-6 py-6 text-sm">
-      <a href="index.html" class="block py-2 text-zinc-600">← Back to Home</a>
-      <a href="gallery.html" class="block py-2 text-yellow-600 font-medium">Gallery</a>
-      <a href="tel:9318966453" class="block py-2 mt-2 text-yellow-600 font-medium">(931) 896-6453</a>
+    <div id="mobile-menu" class="hidden md:hidden border-t border-zinc-800 bg-zinc-900 px-6 py-6 text-sm">
+      <a href="index.html" class="block py-2 text-zinc-300">← Back to Home</a>
+      <a href="index.html#services" class="block py-2 text-zinc-300">Services</a>
+      <a href="index.html#quote-section" class="block py-2 text-zinc-300">Get a Quote</a>
+      <a href="index.html#testimonials" class="block py-2 text-zinc-300">Reviews</a>
+      <a href="index.html#contact" class="block py-2 text-zinc-300">Contact</a>
+      <a href="gallery.html" class="block py-2 text-yellow-400 font-medium">Gallery</a>
+      <a href="tel:9318966453" class="block py-2 mt-2 text-yellow-400 font-medium">(931) 896-6453</a>
       <a href="index.html#quote-section" class="btn-primary block text-center py-3 rounded-full mt-3">Get a Quote</a>
     </div>
   </nav>
 
-  <!-- GALLERY HERO BANNER -->
-  <div class="pt-16 relative bg-white border-b border-zinc-200">
-    <div class="max-w-5xl mx-auto px-6 text-center py-16">
-      <div class="text-yellow-600 text-xs tracking-[4px] font-semibold mb-3">SINCE 1981</div>
-      <h1 class="text-6xl font-bold tracking-tighter mb-4 text-zinc-900">Our Work</h1>
-      <p class="text-2xl text-zinc-600 max-w-2xl mx-auto">
-        Hundreds of vehicles, homes, businesses, and pieces of equipment tinted across Middle Tennessee.
+  <!-- GALLERY HERO -->
+  <div class="pt-16 relative border-b border-zinc-800 overflow-hidden"
+       style="background-image: url('img/Screenshot 2026-06-17 103751_edited.png'); background-size: cover; background-position: center 40%;">
+    <div class="absolute inset-0 bg-black/65"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-zinc-950"></div>
+    <div class="relative max-w-5xl mx-auto px-6 text-center py-20">
+      <div class="text-yellow-400 text-xs tracking-[4px] font-semibold mb-3">SINCE 1981</div>
+      <h1 class="section-title text-6xl font-bold tracking-tighter mb-4 text-white">Our Work</h1>
+      <p class="text-xl text-zinc-200 max-w-2xl mx-auto">
+        Hundreds of vehicles, homes, businesses, and pieces of equipment tinted across Middle Tennessee — every automotive ceramic &amp; carbon install backed by a lifetime warranty.
       </p>
-      <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
         <a href="index.html" class="btn-secondary px-6 py-2.5 rounded-full text-sm inline-flex items-center">← Back to Home</a>
         <a href="tel:9318966453" class="btn-primary px-6 py-2.5 rounded-full text-sm inline-flex items-center">Call (931) 896-6453</a>
       </div>
@@ -150,7 +170,7 @@
   <div class="max-w-7xl mx-auto px-6 py-9">
     
     <!-- Sticky filter bar -->
-    <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-8 sticky top-16 z-40 bg-zinc-50/95 py-4 border-b border-zinc-200">
+    <div class="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-8 sticky top-16 z-40 bg-zinc-950/95 backdrop-blur py-4 border-b border-zinc-800">
       
       <!-- Category pills (populated from admin-managed categories) -->
       <div class="flex flex-wrap gap-2" id="category-filters">
@@ -183,9 +203,9 @@
       </div>
     </div>
 
-    <div class="flex items-center justify-between mb-4 px-1 text-sm text-zinc-600">
+    <div class="flex items-center justify-between mb-4 px-1 text-sm text-zinc-400">
       <div>
-        Showing <span id="result-count" class="font-semibold text-zinc-900">22</span> projects
+        Showing <span id="result-count" class="font-semibold text-white">22</span> projects
       </div>
       <div class="hidden md:block text-xs text-zinc-500">Click any photo for full view &amp; details</div>
     </div>
@@ -197,7 +217,8 @@
 
     <!-- Bottom CTA -->
     <div class="text-center pb-12">
-      <p class="text-zinc-600 mb-3">Ready to add your vehicle or project to the collection?</p>
+      <p class="text-zinc-300 mb-1">Ready to add your vehicle or project to the collection?</p>
+      <p class="text-sm text-zinc-500 mb-3">Lifetime warranty on all automotive ceramic &amp; carbon film installs.</p>
       <a href="index.html#quote-section" class="btn-primary inline-flex items-center gap-2 px-8 py-3 rounded-2xl text-base">Call or Email for a Quote</a>
     </div>
   </div>
@@ -207,21 +228,21 @@
     <div onclick="event.stopImmediatePropagation()" class="modal relative max-w-[1100px] w-full">
       <!-- Close -->
       <button onclick="closeLightbox()" 
-              class="absolute -top-3 -right-3 z-10 bg-white hover:bg-zinc-100 text-zinc-700 p-3 rounded-full border border-zinc-200 shadow">
+              class="absolute -top-3 -right-3 z-10 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-3 rounded-full border border-zinc-700 shadow">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6h12v12"/></svg>
       </button>
 
-      <div class="relative rounded-3xl overflow-hidden border border-zinc-200 shadow-2xl bg-white">
-        <img id="lightbox-image" class="w-full max-h-[72vh] object-contain bg-zinc-50" alt="">
+      <div class="relative rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl bg-zinc-900">
+        <img id="lightbox-image" class="w-full max-h-[72vh] object-contain bg-zinc-950" alt="">
         
-        <div class="p-6 bg-white border-t border-zinc-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="p-6 bg-zinc-900 border-t border-zinc-800 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <div class="flex items-center gap-3 mb-1">
-              <span id="lightbox-category" class="uppercase tracking-[2px] text-xs text-yellow-600"></span>
-              <span id="lightbox-darkness" class="text-xs bg-yellow-100 px-2 py-px rounded text-yellow-700"></span>
+              <span id="lightbox-category" class="uppercase tracking-[2px] text-xs text-yellow-400"></span>
+              <span id="lightbox-darkness" class="text-xs bg-yellow-400/20 px-2 py-px rounded text-yellow-300"></span>
             </div>
-            <div id="lightbox-title" class="text-2xl font-semibold tracking-tight text-zinc-900"></div>
-            <div id="lightbox-desc" class="text-zinc-600 mt-1"></div>
+            <div id="lightbox-title" class="text-2xl font-semibold tracking-tight text-white"></div>
+            <div id="lightbox-desc" class="text-zinc-300 mt-1"></div>
           </div>
 
           <div class="flex gap-3 self-start md:self-auto">
@@ -243,12 +264,35 @@
     </div>
   </div>
 
-  <!-- FOOTER (light) -->
-  <footer class="border-t border-zinc-200 bg-white">
-    <div class="max-w-7xl mx-auto px-6 py-9 text-sm flex flex-col md:flex-row md:items-center justify-between gap-y-3 text-zinc-500">
-      <div>© <span id="year"></span> Joe's Window Tinting • Clarksville, TN</div>
-      <a href="index.html" class="hover:text-zinc-800">Back to homepage</a>
-      <div class="text-xs">All images are representative examples. Real customer photos coming soon.</div>
+  <!-- FOOTER -->
+  <footer class="border-t border-zinc-800 bg-zinc-900">
+    <div class="max-w-7xl mx-auto px-6 py-14 text-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-y-6">
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <img src="img/Screenshot 2026-06-17 111000_edited.png" alt="Logo" class="h-8 w-auto object-contain" />
+          </div>
+          <div class="text-zinc-400">Serving Clarksville &amp; Middle Tennessee since 1981</div>
+        </div>
+
+        <div class="flex flex-wrap gap-x-8 gap-y-1 text-zinc-400">
+          <a href="index.html" class="hover:text-yellow-400">Home</a>
+          <a href="gallery.html" class="hover:text-yellow-400 text-yellow-400">Gallery</a>
+          <a href="tel:9318966453" class="hover:text-yellow-400 font-medium text-yellow-400">(931) 896-6453</a>
+        </div>
+      </div>
+
+      <div class="h-px bg-zinc-800 my-9"></div>
+
+      <div class="flex flex-col md:flex-row gap-y-2 items-center justify-between text-xs text-zinc-400">
+        <div>© <span id="year"></span> Joe's Window Tinting. All rights reserved.</div>
+        <div class="flex flex-wrap gap-x-5 gap-y-1 justify-center">
+          <span>Lifetime Warranty on Ceramic &amp; Carbon Film</span>
+          <span>•</span>
+          <span>3M • LLumar • XPEL Certified</span>
+        </div>
+        <div>Serving Clarksville &amp; Middle Tennessee</div>
+      </div>
     </div>
   </footer>
 
@@ -282,6 +326,16 @@
       if (y) y.textContent = new Date().getFullYear();
     }
 
+    function formatGalleryCategory(category) {
+      const labels = {
+        automotive: 'Automotive',
+        residential: 'Residential',
+        commercial: 'Commercial',
+        ag: 'Ag & Equipment'
+      };
+      return labels[category] || category;
+    }
+
     function initCategoryFilters() {
       const container = document.getElementById('category-filters');
       container.innerHTML = '';
@@ -313,7 +367,7 @@
         const btn = document.createElement('button');
         btn.textContent = cat.name;
         btn.dataset.filterId = filterId;
-        btn.className = `filter-btn px-5 py-2 rounded-full border text-sm font-medium whitespace-nowrap ${filterId === activeFilter ? 'active border-yellow-400' : 'border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:border-zinc-300'}`;
+        btn.className = `filter-btn px-5 py-2 rounded-full border text-sm font-medium whitespace-nowrap ${filterId === activeFilter ? 'active border-yellow-400' : 'border-zinc-800 text-zinc-400 hover:text-yellow-400 hover:border-zinc-600'}`;
         
         btn.onclick = () => {
           activeFilter = filterId;
@@ -385,28 +439,28 @@
       countEl.textContent = currentFiltered.length;
 
       if (currentFiltered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500">No projects match your filters. Try clearing the search.</div>`;
+        grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-400">No projects match your filters. Try clearing the search.</div>`;
         return;
       }
 
       currentFiltered.forEach((item) => {
         const card = document.createElement('div');
-        card.className = 'gallery-card group relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-200 cursor-pointer bg-white';
+        card.className = 'gallery-card group relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-800 cursor-pointer';
         
         card.innerHTML = `
           <img src="${item.img}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.08]" loading="lazy">
-          <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/60 to-black/95"></div>
+          <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/50 to-black/90"></div>
           
-          <div class="absolute bottom-0 left-0 p-6 text-zinc-900">
+          <div class="absolute bottom-0 left-0 p-6 text-white">
             <div class="flex items-center gap-2 mb-1">
-              <span class="uppercase text-yellow-600 text-xs tracking-widest">${item.category}</span>
-              <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded">${item.darkness}</span>
+              <span class="uppercase text-yellow-400 text-xs tracking-widest font-semibold">${formatGalleryCategory(item.category)}</span>
+              <span class="text-xs px-2 py-0.5 bg-yellow-400/20 text-yellow-300 rounded">${item.darkness}</span>
             </div>
             <div class="font-semibold text-xl tracking-tight leading-tight pr-8 line-clamp-2">${item.title}</div>
-            <div class="text-sm text-zinc-600 mt-1 line-clamp-1">${item.desc}</div>
+            <div class="text-sm text-zinc-300 mt-1 line-clamp-1">${item.desc}</div>
           </div>
 
-          <div class="absolute top-4 right-4 bg-white/90 p-2 rounded-xl text-zinc-600 group-hover:text-zinc-900 transition border border-zinc-200">
+          <div class="absolute top-4 right-4 bg-zinc-900/80 p-2 rounded-xl text-zinc-300 group-hover:text-yellow-400 transition border border-zinc-700">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-[18px] h-[18px]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
           </div>
         `;
@@ -436,7 +490,7 @@
       document.getElementById('lightbox-image').src = item.img;
       document.getElementById('lightbox-title').textContent = item.title;
       document.getElementById('lightbox-desc').textContent = item.desc;
-      document.getElementById('lightbox-category').textContent = item.category;
+      document.getElementById('lightbox-category').textContent = formatGalleryCategory(item.category);
       document.getElementById('lightbox-darkness').textContent = item.darkness + ' VLT';
       document.getElementById('lightbox-counter').textContent = `${selectedIndex + 1} / ${currentFiltered.length}`;
     }
