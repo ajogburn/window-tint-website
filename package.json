@@ -4,7 +4,7 @@
   "description": "A clean, **pure static website** (no React, no build tools, no Node required) for Joe's Window Tinting.",
   "main": "index.js",
   "scripts": {
-    "build": "exit 0",
+    "build": "node scripts/prepare-deploy.mjs",
     "setup:supabase": "node scripts/setup-supabase.mjs",
     "db:schema": "node scripts/run-schema.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
