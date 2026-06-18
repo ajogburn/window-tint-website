@@ -205,7 +205,7 @@
 
     <div class="flex items-center justify-between mb-4 px-1 text-sm text-zinc-400">
       <div>
-        Showing <span id="result-count" class="font-semibold text-white">22</span> projects
+        Showing <span id="result-count" class="font-semibold text-white">—</span> projects
       </div>
       <div class="hidden md:block text-xs text-zinc-500">Click any photo for full view &amp; details</div>
     </div>
@@ -297,17 +297,38 @@
   </footer>
 
   <script>
-    // ==================== DATA — now loaded from shared admin layer (localStorage) ====================
+    // ==================== DATA — loaded from Supabase only ====================
     let GALLERY_ITEMS = [];
 
+    function escapeHtml(str) {
+      return window.JoWT?.escapeHtml?.(str) ?? String(str || '');
+    }
+
+    function escapeAttr(str) {
+      return window.JoWT?.escapeAttr?.(str) ?? String(str || '').replace(/"/g, '&quot;');
+    }
+
     async function loadGalleryData() {
-      GALLERY_ITEMS = window.JoWTSupabase
-        ? await window.JoWTSupabase.getGalleryItems()
-        : [];
+      if (!window.JoWTSupabase) {
+        GALLERY_ITEMS = [];
+        return;
+      }
+
+      try {
+        GALLERY_ITEMS = await window.JoWTSupabase.getGalleryItems();
+      } catch (err) {
+        console.error('[Gallery] Failed to load from Supabase:', err);
+        GALLERY_ITEMS = [];
+      }
+    }
+
+    function showGalleryLoading() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '<div class="col-span-full py-16 text-center text-zinc-400">Loading gallery...</div>';
+      document.getElementById('result-count').textContent = '—';
     }
 
     // State
-    // (Categories are now loaded dynamically in initCategoryFilters from the admin data layer)
     let activeFilter = 'all';
     let vehicleFilter = 'All Vehicles';
     let searchTerm = '';
@@ -432,28 +453,32 @@
       countEl.textContent = currentFiltered.length;
 
       if (currentFiltered.length === 0) {
-        const emptyMessage = GALLERY_ITEMS.length === 0
-          ? 'Gallery photos coming soon. Check back after we upload our latest work.'
-          : 'No projects match your filters. Try clearing the search.';
+        const emptyMessage = !window.JoWTSupabase
+          ? 'Gallery is temporarily unavailable. Please refresh the page.'
+          : GALLERY_ITEMS.length === 0
+            ? 'Gallery photos coming soon. Check back after we upload our latest work.'
+            : 'No projects match your filters. Try clearing the search.';
         grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-400">${emptyMessage}</div>`;
         return;
       }
 
       currentFiltered.forEach((item) => {
+        if (!item.img) return;
+
         const card = document.createElement('div');
         card.className = 'gallery-card group relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-800 cursor-pointer';
         
         card.innerHTML = `
-          <img src="${item.img}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.08]" loading="lazy">
+          <img src="${escapeAttr(item.img)}" alt="${escapeAttr(item.title)}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.08]" loading="lazy">
           <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/50 to-black/90"></div>
           
           <div class="absolute bottom-0 left-0 p-6 text-white">
             <div class="flex items-center gap-2 mb-1">
-              <span class="uppercase text-yellow-400 text-xs tracking-widest font-semibold">${formatGalleryCategory(item.category)}</span>
-              <span class="text-xs px-2 py-0.5 bg-yellow-400/20 text-yellow-300 rounded">${item.darkness}</span>
+              <span class="uppercase text-yellow-400 text-xs tracking-widest font-semibold">${escapeHtml(formatGalleryCategory(item.category))}</span>
+              <span class="text-xs px-2 py-0.5 bg-yellow-400/20 text-yellow-300 rounded">${escapeHtml(item.darkness)}</span>
             </div>
-            <div class="font-semibold text-xl tracking-tight leading-tight pr-8 line-clamp-2">${item.title}</div>
-            <div class="text-sm text-zinc-300 mt-1 line-clamp-1">${item.desc}</div>
+            <div class="font-semibold text-xl tracking-tight leading-tight pr-8 line-clamp-2">${escapeHtml(item.title)}</div>
+            <div class="text-sm text-zinc-300 mt-1 line-clamp-1">${escapeHtml(item.desc)}</div>
           </div>
 
           <div class="absolute top-4 right-4 bg-zinc-900/80 p-2 rounded-xl text-zinc-300 group-hover:text-yellow-400 transition border border-zinc-700">
@@ -532,6 +557,7 @@
 
     async function initGallery() {
       initYear();
+      showGalleryLoading();
 
       await loadGalleryData();
       initCategoryFilters();

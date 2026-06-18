@@ -360,7 +360,7 @@
         row.className = 'admin-row flex gap-4 items-center bg-[#161618] border border-zinc-800 rounded-2xl p-3';
 
         const safeId = String(item.id || '').replace(/'/g, "\\'");
-        const imgSrc = item.img && item.img.startsWith('data:') ? item.img : (item.img || 'https://picsum.photos/id/1015/80/80');
+        const imgSrc = item.img || '';
 
         row.innerHTML = `
           <img src="${imgSrc}" class="w-16 h-16 object-cover rounded-lg border border-zinc-700 flex-shrink-0" alt="">

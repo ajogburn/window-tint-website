@@ -51,6 +51,18 @@
     return supabaseClient;
   }
 
+  function isPlaceholderImage(url) {
+    if (!url || typeof url !== 'string') return true;
+    const lower = url.toLowerCase().trim();
+    if (!lower) return true;
+    return (
+      lower.includes('picsum.photos') ||
+      lower.includes('placehold.co') ||
+      lower.includes('placeholder.com') ||
+      lower.includes('via.placeholder.com')
+    );
+  }
+
   function rowToItem(row) {
     if (!row) return null;
     return {
@@ -106,7 +118,9 @@
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data || []).map(rowToItem);
+      return (data || [])
+        .map(rowToItem)
+        .filter((item) => item && !isPlaceholderImage(item.img));
     } catch (err) {
       console.error('[Supabase] getGalleryItems error:', err);
       return [];

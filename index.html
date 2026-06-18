@@ -827,13 +827,28 @@
       return labels[category] || category;
     }
 
+    function escapeHtml(str) {
+      return window.JoWT?.escapeHtml?.(str) ?? String(str || '');
+    }
+
+    function escapeAttr(str) {
+      return window.JoWT?.escapeAttr?.(str) ?? String(str || '').replace(/"/g, '&quot;');
+    }
+
     async function initHomeGalleryPreview() {
       const grid = document.getElementById('home-gallery-grid');
       if (!grid) return;
 
-      const items = window.JoWTSupabase
-        ? (await window.JoWTSupabase.getGalleryItems()).slice(0, 6)
-        : [];
+      grid.innerHTML = '<div class="col-span-full text-center text-zinc-400 py-8">Loading gallery...</div>';
+
+      let items = [];
+      if (window.JoWTSupabase) {
+        try {
+          items = (await window.JoWTSupabase.getGalleryItems()).filter((item) => item.img).slice(0, 6);
+        } catch (err) {
+          console.error('[Home] Failed to load gallery from Supabase:', err);
+        }
+      }
 
       if (!items.length) {
         grid.innerHTML = '<div class="col-span-full text-center text-zinc-400 py-8">Gallery photos coming soon.</div>';
@@ -847,14 +862,14 @@
         card.className = 'gallery-card group relative aspect-[4/3] overflow-hidden rounded-3xl border border-zinc-800 cursor-pointer block';
 
         card.innerHTML = `
-          <img src="${item.img}" alt="${item.title}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.06]" loading="lazy">
+          <img src="${escapeAttr(item.img)}" alt="${escapeAttr(item.title)}" class="absolute inset-0 w-full h-full object-cover transition duration-500 group-hover:scale-[1.06]" loading="lazy">
           <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-black/50 to-black/90"></div>
           <div class="absolute bottom-0 left-0 p-5 text-white">
             <div class="flex items-center gap-2 mb-1">
-              <span class="uppercase text-yellow-400 text-[10px] tracking-widest font-semibold">${formatGalleryCategory(item.category)}</span>
-              <span class="text-[10px] px-2 py-0.5 bg-yellow-400/20 text-yellow-300 rounded">${item.darkness}</span>
+              <span class="uppercase text-yellow-400 text-[10px] tracking-widest font-semibold">${escapeHtml(formatGalleryCategory(item.category))}</span>
+              <span class="text-[10px] px-2 py-0.5 bg-yellow-400/20 text-yellow-300 rounded">${escapeHtml(item.darkness)}</span>
             </div>
-            <div class="font-semibold text-lg tracking-tight leading-tight line-clamp-2">${item.title}</div>
+            <div class="font-semibold text-lg tracking-tight leading-tight line-clamp-2">${escapeHtml(item.title)}</div>
           </div>
         `;
 
