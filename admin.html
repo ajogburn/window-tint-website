@@ -43,6 +43,10 @@
     .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background:#18181b; color:#e4e4e7; padding:10px 18px; border-radius:9999px; font-size:13px; box-shadow:0 10px 15px -3px rgb(0 0 0 / 0.3); z-index:99999; display:none; align-items:center; gap:8px; border:1px solid #27272a; }
     .progress-bar { height: 4px; background: #27272a; border-radius: 9999px; overflow: hidden; }
     .progress-bar > div { height: 100%; background: #facc15; transition: width .15s linear; }
+    .file-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: .5rem; }
+    .file-preview-item { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; border: 1px solid #27272a; background: #18181b; }
+    .file-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .file-preview-item span { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.75); font-size: 9px; padding: 2px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   </style>
 </head>
 <body class="bg-[#0a0a0c] text-zinc-200">
@@ -149,7 +153,7 @@
           <div class="font-semibold">Gallery Work</div>
           <div class="text-xs text-zinc-500">Add, edit, or delete pieces shown on the public gallery.</div>
         </div>
-        <button onclick="showUploadModal()" class="btn btn-primary">+ UPLOAD NEW PIECE</button>
+        <button onclick="showUploadModal()" class="btn btn-primary">+ UPLOAD IMAGES</button>
       </div>
 
       <div id="admin-gallery-list" class="space-y-2"></div>
@@ -160,26 +164,30 @@
   <div id="upload-modal" onclick="if (event.target.id === 'upload-modal') hideUploadModal()" class="fixed inset-0 bg-black/90 hidden items-center justify-center z-[200] p-4">
     <div onclick="event.stopImmediatePropagation()" class="bg-[#161618] border border-zinc-700 w-full max-w-lg rounded-3xl p-7">
       <div class="font-semibold text-2xl tracking-tighter mb-1" id="modal-title">Upload New Work</div>
-      <div class="text-sm text-zinc-400 mb-6" id="modal-subtitle">Images are uploaded to Supabase Storage and appear on the live gallery instantly.</div>
+      <div class="text-sm text-zinc-400 mb-6" id="modal-subtitle">Select one or more images. Each file becomes its own gallery piece with the same category settings below.</div>
 
       <form id="upload-form" onsubmit="handleUploadSubmit(event)">
         <input type="hidden" id="edit-id">
 
         <!-- File picker -->
         <div class="mb-5" id="file-section">
-          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">IMAGE FILE</label>
-          <input type="file" id="upload-file" accept="image/*" class="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-zinc-900 file:text-white hover:file:bg-zinc-800" required>
-          <div class="text-[11px] text-zinc-500 mt-1.5">JPG, PNG, WebP recommended. Keep files small for best performance.</div>
+          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">IMAGE FILES</label>
+          <input type="file" id="upload-file" accept="image/*" multiple class="block w-full text-sm file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:bg-zinc-900 file:text-white hover:file:bg-zinc-800" required onchange="updateFilePreview()">
+          <div class="text-[11px] text-zinc-500 mt-1.5">Select multiple images at once (Ctrl+click or Shift+click). JPG, PNG, WebP recommended.</div>
+          <div id="file-preview-wrap" class="hidden mt-4">
+            <div class="text-xs text-zinc-400 mb-2" id="file-preview-count"></div>
+            <div id="file-preview-grid" class="file-preview-grid max-h-40 overflow-y-auto"></div>
+          </div>
         </div>
 
         <div class="mb-4">
-          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">TITLE / PROJECT</label>
-          <input id="upload-title" type="text" class="form-input w-full" placeholder="2024 Ford F-150 — 20% Ceramic" required>
+          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">TITLE / PROJECT <span id="title-hint" class="text-zinc-500 normal-case tracking-normal">(optional for multiple — uses file names)</span></label>
+          <input id="upload-title" type="text" class="form-input w-full" placeholder="2024 Ford F-150 — 20% Ceramic">
         </div>
 
         <div class="mb-5">
-          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">DESCRIPTION</label>
-          <input id="upload-desc" type="text" class="form-input w-full" placeholder="Full ceramic. Great heat rejection on this work truck." required>
+          <label class="block text-xs tracking-[1.5px] text-zinc-400 mb-2">DESCRIPTION <span class="text-zinc-500 normal-case tracking-normal">(optional)</span></label>
+          <input id="upload-desc" type="text" class="form-input w-full" placeholder="Full ceramic. Great heat rejection on this work truck.">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -205,7 +213,7 @@
         <!-- Progress -->
         <div id="upload-progress-wrap" class="hidden mt-6">
           <div class="text-xs text-zinc-400 mb-1.5 flex justify-between">
-            <div>PROCESSING...</div>
+            <div id="upload-status">PROCESSING...</div>
             <div id="upload-percent">0%</div>
           </div>
           <div class="progress-bar"><div id="upload-progress" style="width:0%"></div></div>
@@ -386,6 +394,87 @@
 
     // Modal
     let editingId = null;
+    let previewObjectUrls = [];
+
+    function clearFilePreview() {
+      previewObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+      previewObjectUrls = [];
+      document.getElementById('file-preview-wrap').classList.add('hidden');
+      document.getElementById('file-preview-grid').innerHTML = '';
+      document.getElementById('file-preview-count').textContent = '';
+    }
+
+    function formatFilenameAsTitle(filename) {
+      const base = (filename || '').replace(/\.[^.]+$/, '');
+      return base.replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim() || 'Untitled';
+    }
+
+    function buildBatchTitle(baseTitle, file, index, total) {
+      if (total === 1) {
+        return baseTitle || formatFilenameAsTitle(file.name);
+      }
+      if (baseTitle) {
+        return total > 1 ? `${baseTitle} (${index + 1})` : baseTitle;
+      }
+      return formatFilenameAsTitle(file.name);
+    }
+
+    function updateSubmitButtonLabel() {
+      const fileInput = document.getElementById('upload-file');
+      const submitBtn = document.getElementById('upload-submit-btn');
+      const count = fileInput.files ? fileInput.files.length : 0;
+
+      if (editingId) {
+        submitBtn.textContent = 'SAVE CHANGES';
+        return;
+      }
+
+      if (count > 1) {
+        submitBtn.textContent = `UPLOAD ${count} IMAGES`;
+      } else {
+        submitBtn.textContent = 'UPLOAD & PUBLISH';
+      }
+    }
+
+    function updateFilePreview() {
+      const fileInput = document.getElementById('upload-file');
+      const wrap = document.getElementById('file-preview-wrap');
+      const grid = document.getElementById('file-preview-grid');
+      const countEl = document.getElementById('file-preview-count');
+      const titleHint = document.getElementById('title-hint');
+
+      clearFilePreview();
+
+      const files = fileInput.files ? Array.from(fileInput.files) : [];
+      updateSubmitButtonLabel();
+
+      if (!files.length) {
+        titleHint.textContent = '(optional for multiple — uses file names)';
+        return;
+      }
+
+      wrap.classList.remove('hidden');
+      countEl.textContent = files.length === 1
+        ? '1 image selected'
+        : `${files.length} images selected — each will be added as a separate gallery piece`;
+
+      titleHint.textContent = files.length > 1
+        ? '(optional — blank titles use file names)'
+        : '(optional — blank uses file name)';
+
+      files.forEach((file) => {
+        const url = URL.createObjectURL(file);
+        previewObjectUrls.push(url);
+
+        const item = document.createElement('div');
+        item.className = 'file-preview-item';
+        item.innerHTML = `
+          <img src="${url}" alt="">
+          <span>${file.name}</span>
+        `;
+        grid.appendChild(item);
+      });
+    }
 
     async function showUploadModal(existing = null) {
       const modal = document.getElementById('upload-modal');
@@ -396,7 +485,9 @@
       const submitBtn = document.getElementById('upload-submit-btn');
 
       form.reset();
+      clearFilePreview();
       document.getElementById('upload-progress-wrap').classList.add('hidden');
+      document.getElementById('upload-status').textContent = 'PROCESSING...';
       document.getElementById('edit-id').value = '';
       editingId = null;
 
@@ -425,15 +516,17 @@
         catSelect.value = catVal;
 
         document.getElementById('file-section').classList.add('hidden');
+        document.getElementById('title-hint').classList.add('hidden');
         fileInput.required = false;
         submitBtn.textContent = 'SAVE CHANGES';
       } else {
         editingId = null;
         titleEl.textContent = 'Upload New Work';
-        subEl.textContent = 'Photo uploads to Supabase Storage and appears instantly on the public gallery.';
+        subEl.textContent = 'Select one or more images. Each file becomes its own gallery piece with the same category settings below.';
         document.getElementById('file-section').classList.remove('hidden');
+        document.getElementById('title-hint').classList.remove('hidden');
         fileInput.required = true;
-        submitBtn.textContent = 'UPLOAD & PUBLISH';
+        updateSubmitButtonLabel();
       }
 
       modal.classList.remove('hidden');
@@ -444,7 +537,9 @@
       const modal = document.getElementById('upload-modal');
       modal.classList.remove('flex');
       modal.classList.add('hidden');
+      clearFilePreview();
       document.getElementById('file-section').classList.remove('hidden');
+      document.getElementById('title-hint').classList.remove('hidden');
       document.getElementById('upload-file').required = true;
     }
 
@@ -461,37 +556,59 @@
       const progressWrap = document.getElementById('upload-progress-wrap');
       const progressBar = document.getElementById('upload-progress');
       const percentEl = document.getElementById('upload-percent');
+      const statusEl = document.getElementById('upload-status');
       const submitBtn = document.getElementById('upload-submit-btn');
 
       submitBtn.disabled = true;
 
       try {
         if (id) {
+          if (!title) {
+            alert('Please enter a title.');
+            submitBtn.disabled = false;
+            return;
+          }
           await window.JoWTSupabase.updateGalleryItem(id, { title, desc, category, darkness, vehicleType });
           window.JoWT.showToast('Piece updated in Supabase.');
         } else {
-          if (!fileInput.files || !fileInput.files[0]) {
-            alert('Please select an image file.');
+          const files = fileInput.files ? Array.from(fileInput.files) : [];
+          if (!files.length) {
+            alert('Please select at least one image file.');
             submitBtn.disabled = false;
             return;
           }
 
-          const file = fileInput.files[0];
           progressWrap.classList.remove('hidden');
+          let uploadedCount = 0;
 
-          const onProgress = (pct) => {
-            progressBar.style.width = pct + '%';
-            percentEl.textContent = pct + '%';
-          };
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const itemTitle = buildBatchTitle(title, file, i, files.length);
+            statusEl.textContent = files.length > 1
+              ? `Uploading ${i + 1} of ${files.length}: ${file.name}`
+              : 'PROCESSING...';
 
-          await window.JoWTSupabase.uploadGalleryImage(
-            file,
-            { title, desc, category, darkness, vehicleType },
-            onProgress
-          );
+            const onProgress = (pct) => {
+              const overall = Math.round(((i + (pct / 100)) / files.length) * 100);
+              progressBar.style.width = overall + '%';
+              percentEl.textContent = overall + '%';
+            };
+
+            await window.JoWTSupabase.uploadGalleryImage(
+              file,
+              { title: itemTitle, desc, category, darkness, vehicleType },
+              onProgress
+            );
+
+            uploadedCount++;
+          }
 
           await new Promise(r => setTimeout(r, 120));
-          window.JoWT.showToast('Uploaded! Visible on the public gallery now.');
+          window.JoWT.showToast(
+            uploadedCount === 1
+              ? 'Uploaded! Visible on the public gallery now.'
+              : `${uploadedCount} images uploaded to the gallery.`
+          );
         }
 
         hideUploadModal();
